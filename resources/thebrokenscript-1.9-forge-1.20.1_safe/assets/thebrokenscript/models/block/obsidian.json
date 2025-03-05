@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "thebrokenscript:block/redobsidian",
+    "up": "thebrokenscript:block/redobsidian",
+    "north": "thebrokenscript:block/redobsidian",
+    "east": "thebrokenscript:block/redobsidian",
+    "south": "thebrokenscript:block/redobsidian",
+    "west": "thebrokenscript:block/redobsidian",
+    "particle": "thebrokenscript:block/redobsidian"
+  },
+  "render_type": "solid"
+}

@@ -1,0 +1,7 @@
+{
+  "blend": "alpha",
+  "name": "a",
+  "fog": "none",
+  "format": "position_tex",
+  "program": "thebrokenscript:shaders/tbsshader/final"
+}

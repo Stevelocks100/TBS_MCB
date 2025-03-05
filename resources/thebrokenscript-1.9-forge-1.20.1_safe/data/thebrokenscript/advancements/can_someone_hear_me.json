@@ -1,0 +1,23 @@
+{
+  "display": {
+    "background": "minecraft:textures/block/stone.png",
+    "icon": {
+      "item": "thebrokenscript:obsidian"
+    },
+    "title": {
+      "translate": "advancements.can_someone_hear_me.title"
+    },
+    "description": {
+      "translate": "advancements.can_someone_hear_me.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "can_someone_hear_me_0": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

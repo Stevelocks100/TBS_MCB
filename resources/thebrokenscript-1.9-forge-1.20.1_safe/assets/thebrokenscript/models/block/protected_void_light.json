@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "thebrokenscript:block/voidlight",
+    "up": "thebrokenscript:block/voidlight",
+    "north": "thebrokenscript:block/voidlight",
+    "east": "thebrokenscript:block/voidlight",
+    "south": "thebrokenscript:block/voidlight",
+    "west": "thebrokenscript:block/voidlight",
+    "particle": "thebrokenscript:block/voidlight"
+  },
+  "render_type": "solid"
+}

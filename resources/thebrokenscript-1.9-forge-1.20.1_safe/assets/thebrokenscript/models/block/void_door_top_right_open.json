@@ -1,0 +1,9 @@
+{
+  "parent": "block/door_top_right_open",
+  "textures": {
+    "particle": "thebrokenscript:block/voiddoordown",
+    "bottom": "thebrokenscript:block/voiddoordown",
+    "top": "thebrokenscript:block/voiddoorup"
+  },
+  "render_type": "cutout"
+}

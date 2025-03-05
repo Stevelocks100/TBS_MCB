@@ -1,0 +1,40 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"falling": {
+			"loop": true,
+			"animation_length": 0.25,
+			"bones": {
+				"bone": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 1]
+						},
+						"0.0417": {
+							"vector": [-2, 11, 1],
+							"easing": "easeInOutBounce"
+						},
+						"0.0833": {
+							"vector": [1, 0, 0],
+							"easing": "easeInOutBounce"
+						},
+						"0.125": {
+							"vector": [1, 2, 1],
+							"easing": "easeInOutBounce"
+						},
+						"0.1667": {
+							"vector": [6, 2, 1]
+						},
+						"0.2083": {
+							"vector": [-12, -6, 1]
+						},
+						"0.25": {
+							"vector": [-12, 10, 1]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

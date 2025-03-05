@@ -1,0 +1,35 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "badlands",
+    "bamboo_jungle",
+    "basalt_deltas",
+    "beach",
+    "birch_forest",
+    "cherry_grove",
+    "cold_ocean",
+    "crimson_forest",
+    "dark_forest",
+    "plains",
+    "snowy_plains",
+    "sunflower_plains",
+    "flower_forest",
+    "forest",
+    "old_growth_birch_forest",
+    "warped_forest",
+    "windswept_forest",
+    "old_growth_pine_taiga",
+    "old_growth_spruce_taiga",
+    "snowy_taiga",
+    "taiga",
+    "savanna",
+    "savanna_plateau",
+    "windswept_savanna"
+  ],
+  "spawners": {
+    "type": "thebrokenscript:faraway",
+    "weight": 1,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

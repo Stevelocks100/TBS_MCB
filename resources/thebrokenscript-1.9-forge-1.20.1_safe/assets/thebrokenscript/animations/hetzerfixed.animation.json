@@ -1,0 +1,113 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"idle1": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"bone": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, -360, 0],
+							"easing": "step"
+						}
+					}
+				},
+				"bone3": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, -450, 0],
+							"easing": "step",
+							"easingArgs": [7]
+						}
+					}
+				},
+				"bone4": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, -360],
+							"easing": "step"
+						}
+					}
+				},
+				"bone5": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [-360, 0, -360],
+							"easing": "step"
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.1667": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutBounce"
+						},
+						"0.2083": {
+							"vector": [65, 44, 0],
+							"easing": "easeInOutBounce"
+						},
+						"0.25": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutBounce"
+						},
+						"0.4583": {
+							"vector": [0, 30, 0],
+							"easing": "easeInOutBounce",
+							"easingArgs": [4]
+						},
+						"0.5417": {
+							"vector": [41, -4, 0],
+							"easing": "easeInBounce",
+							"easingArgs": [3]
+						},
+						"0.625": {
+							"vector": [0, 30, 0],
+							"easing": "easeInBounce",
+							"easingArgs": [3]
+						},
+						"0.6667": {
+							"vector": [65, 44, 0]
+						},
+						"0.7083": {
+							"vector": [0, 30, 0],
+							"easing": "step",
+							"easingArgs": [2]
+						},
+						"0.7917": {
+							"vector": [0, 30, 0],
+							"easing": "step"
+						},
+						"0.8333": {
+							"vector": [-61, 18, 0]
+						},
+						"0.875": {
+							"vector": [0, 30, 0],
+							"easing": "step",
+							"easingArgs": [42]
+						},
+						"1.0": {
+							"vector": [0, 0, 0],
+							"easing": "step"
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

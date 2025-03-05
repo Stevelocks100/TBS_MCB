@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "thebrokenscript:blocks/block_is_missing_id",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thebrokenscript:block_is_missing_id"
+        }
+      ]
+    }
+  ]
+}

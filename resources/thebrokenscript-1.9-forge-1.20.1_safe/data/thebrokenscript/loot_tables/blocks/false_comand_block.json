@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "thebrokenscript:blocks/false_comand_block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thebrokenscript:false_comand_block"
+        }
+      ]
+    }
+  ]
+}

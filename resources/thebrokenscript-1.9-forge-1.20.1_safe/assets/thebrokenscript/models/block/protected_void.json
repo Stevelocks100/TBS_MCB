@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "thebrokenscript:block/voidexpblock",
+    "up": "thebrokenscript:block/voidexpblock",
+    "north": "thebrokenscript:block/voidexpblock",
+    "east": "thebrokenscript:block/voidexpblock",
+    "south": "thebrokenscript:block/voidexpblock",
+    "west": "thebrokenscript:block/voidexpblock",
+    "particle": "thebrokenscript:block/voidexpblock"
+  },
+  "render_type": "solid"
+}

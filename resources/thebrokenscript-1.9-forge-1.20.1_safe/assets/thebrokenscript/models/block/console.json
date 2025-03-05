@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "thebrokenscript:block/console",
+    "up": "thebrokenscript:block/console",
+    "north": "thebrokenscript:block/console",
+    "east": "thebrokenscript:block/console",
+    "south": "thebrokenscript:block/console",
+    "west": "thebrokenscript:block/console",
+    "particle": "thebrokenscript:block/console"
+  },
+  "render_type": "solid"
+}

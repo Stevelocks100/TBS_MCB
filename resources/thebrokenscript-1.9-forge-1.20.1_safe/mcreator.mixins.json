@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "net.mcreator.interpritation.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "NoAttackCooldownMixin",
+    "TitleScreenMixin",
+    "MainMenuGlitchMixin1",
+	"NoPauseMixin"
+  ],
+  "Client": [
+	"TitleScreenMixin",
+	"MainMenuGlitchMixin1"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

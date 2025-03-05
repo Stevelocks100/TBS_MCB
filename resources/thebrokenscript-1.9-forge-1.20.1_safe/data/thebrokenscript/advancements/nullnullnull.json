@@ -1,0 +1,23 @@
+{
+  "display": {
+    "background": "minecraft:textures/block/stone.png",
+    "icon": {
+      "item": "thebrokenscript:n"
+    },
+    "title": {
+      "translate": "advancements.nullnullnull.title"
+    },
+    "description": {
+      "translate": "advancements.nullnullnull.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "nullnullnull_0": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

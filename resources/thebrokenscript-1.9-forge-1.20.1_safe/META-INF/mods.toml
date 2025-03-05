@@ -1,0 +1,35 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="thebrokenscript"
+version="1.9"
+displayName="The Broken Script"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/the-broken-script"
+logoFile="logo.png"
+credits=":wendigodrip:"
+authors=":Wendigodrip: "
+description="Here I am."
+
+# Start of user code block mod configuration
+# End of user code block mod configuration
+
+[[dependencies.thebrokenscript]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1]"
+    ordering="AFTER"
+    side="BOTH"
+
+
+[[dependencies.thebrokenscript]]
+    modId="geckolib"
+    mandatory=false
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"
+
+
+# Start of user code block dependencies configuration
+# End of user code block dependencies configuration

@@ -1,0 +1,20 @@
+{
+  "ultrawarm": false,
+  "natural": false,
+  "piglin_safe": true,
+  "respawn_anchor_works": false,
+  "bed_works": true,
+  "has_raids": false,
+  "has_skylight": true,
+  "has_ceiling": false,
+  "coordinate_scale": 1,
+  "ambient_light": 0,
+  "infiniburn": "#minecraft:infiniburn_overworld",
+  "fixed_time": 18000,
+  "min_y": -64,
+  "height": 384,
+  "logical_height": 384,
+  "monster_spawn_light_level": 0,
+  "monster_spawn_block_light_limit": 0,
+  "effects": "thebrokenscript:clan_void"
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "thebrokenscript:blocks/unstable_noise",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thebrokenscript:unstable_noise"
+        }
+      ]
+    }
+  ]
+}

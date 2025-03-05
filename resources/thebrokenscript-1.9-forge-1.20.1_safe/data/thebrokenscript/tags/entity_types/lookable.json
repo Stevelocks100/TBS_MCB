@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "cow",
+    "sheep",
+    "chicken",
+    "cat",
+    "villager",
+    "zombie",
+    "zombie_horse",
+    "zombie_villager",
+    "zombified_piglin",
+    "bat",
+    "bee",
+    "blaze",
+    "creeper",
+    "donkey",
+    "drowned",
+    "elder_guardian",
+    "skeleton",
+    "skeleton_horse",
+    "wither_skeleton",
+    "witch",
+    "horse",
+    "pig",
+    "piglin",
+    "piglin_brute"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:noise",
+  "noise": {
+    "min_y": -64,
+    "height": 384,
+    "size_horizontal": 1,
+    "size_vertical": 2,
+    "density_factor": 0.0,
+    "density_offset": 0.0,
+    "simplex_surface_noise": false,
+    "random_density_offset": false,
+    "island_noise_override": false,
+    "amplified": false
+  },
+  "default_block": "minecraft:stone",
+  "default_fluid": "minecraft:water",
+  "sea_level": 63,
+  "disable_mob_generation": false,
+  "aquifers_enabled": false,
+  "ore_veins_enabled": false,
+  "legacy_random_source": false
+}

@@ -1,0 +1,74 @@
+{
+  "mappings": {
+    "net/mcreator/interpritation/mixins/MainMenuGlitchMixin1": {
+      "render": "Lnet/minecraft/client/gui/screens/TitleScreen;m_88315_(Lnet/minecraft/client/gui/GuiGraphics;IIF)V"
+    },
+    "net/mcreator/interpritation/mixins/OptionsMixin": {
+      "init": "Lnet/minecraft/client/gui/screens/OptionsScreen;m_7856_()V"
+    },
+    "net/mcreator/interpritation/mixins/TitleScreenMixin": {
+      "init": "Lnet/minecraft/client/gui/screens/TitleScreen;m_7856_()V"
+    },
+    "net/mcreator/interpritation/mixins/NoAttackCooldownMixinMixin": {
+      "getAttackStrengthScale": "Lnet/minecraft/world/entity/player/Player;m_36403_(F)F"
+    },
+    "net/mcreator/interpritation/mixins/SingleplayerDynamicPOSMixin": {
+      "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+    },
+    "net/mcreator/interpritation/mixins/NoPauseTheBrokenEndMixin": {
+      "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+    },
+    "net/mcreator/interpritation/mixins/NoPauseMixin": {
+      "init": "Lnet/minecraft/client/gui/screens/PauseScreen;m_7856_()V"
+    },
+    "net/mcreator/interpritation/mixins/NoSettingsMixin": {
+      "init": "Lnet/minecraft/client/gui/screens/PauseScreen;m_7856_()V"
+    },
+    "net/mcreator/interpritation/mixins/NpPauseNullChaseMixin": {
+      "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+    },
+    "net/mcreator/interpritation/mixins/NoPauseCircuitMixin": {
+      "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+    },
+    "net/mcreator/interpritation/mixins/NoPauseNullFlyingMixin": {
+      "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+    }
+  },
+  "data": {
+    "searge": {
+      "net/mcreator/interpritation/mixins/MainMenuGlitchMixin1": {
+        "render": "Lnet/minecraft/client/gui/screens/TitleScreen;m_88315_(Lnet/minecraft/client/gui/GuiGraphics;IIF)V"
+      },
+      "net/mcreator/interpritation/mixins/OptionsMixin": {
+        "init": "Lnet/minecraft/client/gui/screens/OptionsScreen;m_7856_()V"
+      },
+      "net/mcreator/interpritation/mixins/TitleScreenMixin": {
+        "init": "Lnet/minecraft/client/gui/screens/TitleScreen;m_7856_()V"
+      },
+      "net/mcreator/interpritation/mixins/NoAttackCooldownMixinMixin": {
+        "getAttackStrengthScale": "Lnet/minecraft/world/entity/player/Player;m_36403_(F)F"
+      },
+      "net/mcreator/interpritation/mixins/SingleplayerDynamicPOSMixin": {
+        "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+      },
+      "net/mcreator/interpritation/mixins/NoPauseTheBrokenEndMixin": {
+        "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+      },
+      "net/mcreator/interpritation/mixins/NoPauseMixin": {
+        "init": "Lnet/minecraft/client/gui/screens/PauseScreen;m_7856_()V"
+      },
+      "net/mcreator/interpritation/mixins/NoSettingsMixin": {
+        "init": "Lnet/minecraft/client/gui/screens/PauseScreen;m_7856_()V"
+      },
+      "net/mcreator/interpritation/mixins/NpPauseNullChaseMixin": {
+        "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+      },
+      "net/mcreator/interpritation/mixins/NoPauseCircuitMixin": {
+        "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+      },
+      "net/mcreator/interpritation/mixins/NoPauseNullFlyingMixin": {
+        "pauseGame": "Lnet/minecraft/client/Minecraft;m_91358_(Z)V"
+      }
+    }
+  }
+}

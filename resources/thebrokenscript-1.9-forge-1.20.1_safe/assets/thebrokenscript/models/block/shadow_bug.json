@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "thebrokenscript:block/barrier",
+    "up": "thebrokenscript:block/barrier",
+    "north": "thebrokenscript:block/barrier",
+    "east": "thebrokenscript:block/barrier",
+    "south": "thebrokenscript:block/barrier",
+    "west": "thebrokenscript:block/barrier",
+    "particle": "thebrokenscript:block/barrier"
+  },
+  "render_type": "translucent"
+}

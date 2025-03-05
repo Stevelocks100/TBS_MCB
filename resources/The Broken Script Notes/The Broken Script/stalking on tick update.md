@@ -1,0 +1,19 @@
+- if player within 10 blocks, 50% chance to 
+	- despawn
+	- give effect for 500 ticks and amp 1
+	- plays cave ambience
+	- plays 'circuitminigamespeechandcounting' aka circuit minigame speech and counting
+	- after 1800 ticks, spawn out of cave check.
+- otherwise if 70% chance
+	- despawn
+	- spawn [[Circuit]]
+	- give effect for 60 ticks, amp 1
+- else:
+	- despawn
+	- spawn [[Curved]]
+	- give effect for 60 ticks, amp 1
+- set target to closest player within 2k blocks
+- face target
+- maybe if player within 150 blocks
+	- spawn [[Circuit]] mineshaft flee
+	- despawn

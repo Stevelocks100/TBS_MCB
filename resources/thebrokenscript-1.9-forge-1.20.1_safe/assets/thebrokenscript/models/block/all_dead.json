@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "thebrokenscript:block/nullvoid",
+    "up": "thebrokenscript:block/nullvoid",
+    "north": "thebrokenscript:block/nullvoid",
+    "east": "thebrokenscript:block/nullvoid",
+    "south": "thebrokenscript:block/nullvoid",
+    "west": "thebrokenscript:block/nullvoid",
+    "particle": "thebrokenscript:block/nullvoid"
+  },
+  "render_type": "cutout"
+}

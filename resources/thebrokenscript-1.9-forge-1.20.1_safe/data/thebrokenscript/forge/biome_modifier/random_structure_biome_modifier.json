@@ -1,0 +1,30 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "plains",
+    "snowy_plains",
+    "sunflower_plains",
+    "birch_forest",
+    "crimson_forest",
+    "dark_forest",
+    "flower_forest",
+    "forest",
+    "old_growth_birch_forest",
+    "warped_forest",
+    "windswept_forest",
+    "old_growth_pine_taiga",
+    "old_growth_spruce_taiga",
+    "snowy_taiga",
+    "taiga",
+    "snowy_slopes",
+    "snowy_beach",
+    "swamp",
+    "jungle"
+  ],
+  "spawners": {
+    "type": "thebrokenscript:random_structure",
+    "weight": 2,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

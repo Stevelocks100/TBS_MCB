@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:bedrock",
+    "minecraft:chiseled_stone_bricks",
+    "minecraft:smooth_stone",
+    "minecraft:dirt"
+  ]
+}

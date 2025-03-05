@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "thebrokenscript:blocks/clanbuild_anomaly_generator",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thebrokenscript:clanbuild_anomaly_generator"
+        }
+      ]
+    }
+  ]
+}

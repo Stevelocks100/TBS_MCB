@@ -1,0 +1,10 @@
+{
+  "parent": "block/slab_top",
+  "textures": {
+    "particle": "thebrokenscript:block/voidexpblock",
+    "bottom": "thebrokenscript:block/voidexpblock",
+    "top": "thebrokenscript:block/voidexpblock",
+    "side": "thebrokenscript:block/voidexpblock"
+  },
+  "render_type": "solid"
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "thebrokenscript:block/bedrock",
+    "up": "thebrokenscript:block/bedrock",
+    "north": "thebrokenscript:block/block4",
+    "east": "thebrokenscript:block/bedrock",
+    "south": "thebrokenscript:block/block4",
+    "west": "thebrokenscript:block/bedrock",
+    "particle": "thebrokenscript:block/bedrock"
+  },
+  "render_type": "solid"
+}

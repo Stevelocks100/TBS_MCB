@@ -1,0 +1,23 @@
+{
+  "display": {
+    "background": "minecraft:textures/block/stone.png",
+    "icon": {
+      "item": "thebrokenscript:all_dead"
+    },
+    "title": {
+      "translate": "advancements.can_you_see_me.title"
+    },
+    "description": {
+      "translate": "advancements.can_you_see_me.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "can_you_see_me_0": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}
