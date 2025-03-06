@@ -1,6 +1,14 @@
 {
-	"pack":{
-		"pack_format": 69,
+	"pack": {
+		"pack_format": 61,
 		"description": "TBS Made with MC-Build!"
+	},
+	"overlays": {
+		"entries": [
+			{
+				"directory": "animated_java",
+				"formats": 61
+			}
+		]
 	}
 }

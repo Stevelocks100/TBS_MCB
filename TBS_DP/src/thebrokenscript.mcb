@@ -2,6 +2,7 @@ function load minecraft:load{
     scoreboard objectives add mcb.internal dummy
     scoreboard objectives add tbs.event_temp dummy
     scoreboard objectives add tbs.moon_event dummy
+    scoreboard objectives add tbs.entity_temp dummy
     scoreboard objectives remove tbs.overlay_lib
     scoreboard objectives add tbs.overlay_temp dummy
     execute unless score enabled tbs.moon_event = enabled tbs.moon_event run scoreboard players set enabled tbs.moon_event 0
@@ -14,8 +15,52 @@ function tick minecraft:tick {
         execute if score @s tbs.event_temp matches 25.. run fill ~ ~ ~ ~ ~ ~ air replace fire
         execute if score @s tbs.event_temp matches 25.. run kill
     }
+    scoreboard players add @e[tag=tbs.null_scare] tbs.entity_temp 1
+    execute as @e[tag=tbs.null_scare] if score @s tbs.entity_temp matches 10.. run function animated_java:tbs_player/remove/this
     function thebrokenscript:night_lib/main
     function thebrokenscript:overlay_lib/as_player
+    function thebrokenscript:entity/player
+}
+
+function damage_macro {
+    $execute at @s run summon marker ~ ~ ~ {CustomName:'"$(name)"',Tags:["tbs.damage"]}
+    $damage @s $(damage) minecraft:mob_attack by @n[tag=tbs.damage]
+    kill @n[tag=tbs.damage]
+}
+
+function rotation_treshold {
+    # d = mod(abs (t1 - t2),360)
+    # 
+    # if (d > 180)
+    #   d = 360 - d
+    #
+    # if (d <= 10)
+    #
+    # inputs:
+    # current
+    # desired
+    # threshold
+
+    # scoreboard objectives remove tbs.threshold_temp
+    scoreboard objectives add tbs.threshold_temp dummy
+    $scoreboard players set t1 tbs.threshold_temp $(current)
+    $scoreboard players set t2 tbs.threshold_temp $(desired)
+    scoreboard players set 360 tbs.threshold_temp 360
+    scoreboard players set -1 tbs.threshold_temp -1
+    
+    scoreboard players operation d tbs.threshold_temp = t1 tbs.threshold_temp
+    scoreboard players operation d tbs.threshold_temp -= t2 tbs.threshold_temp
+    execute if score d tbs.threshold_temp matches ..-1 run scoreboard players operation d tbs.threshold_temp *= -1 tbs.threshold_temp
+
+    scoreboard players operation d tbs.threshold_temp %= 360 tbs.threshold_temp
+
+    execute if score d tbs.threshold_temp matches 181.. run {
+        scoreboard players operation 360 tbs.threshold_temp -= d tbs.threshold_temp
+        scoreboard players operation d tbs.threshold_temp = 360 tbs.threshold_temp
+    }
+    $execute if score d tbs.threshold_temp matches ..$(threshold) run return 1
+    return 0
+    
 }
 
 advancement nullnullnull {
@@ -194,6 +239,7 @@ dir events {
     }
 
     function 13 {
+        advancement revoke @a only thebrokenscript:nullnullnull
         advancement grant @a only thebrokenscript:nullnullnull
     }
 
@@ -239,7 +285,6 @@ dir events {
         }
     }
 }
-
 
 dir night_lib {
 
@@ -527,3 +572,39 @@ dir overlay_lib {
     }
 }
 
+dir entity {
+    function player {
+        execute as @e[tag=aj.tbs_player.root] at @s rotated as @s run block {
+            execute on passengers if entity @s[tag=aj.tbs_player.data] run data modify storage tbs:temp player.head set from entity @s data.locators.head.uuid
+            execute on passengers if entity @s[tag=aj.tbs_player.bone.head1] run block {
+                data modify storage tbs:temp player.variant set from entity @s item.components."minecraft:custom_model_data".strings[0]
+                block fill_player_head { with storage tbs:temp player
+
+                    $data modify entity $(head) item.components."minecraft:item_model" set value "thebrokenscript:heads/$(variant)"
+                }
+            }
+            block rotate_body { with storage tbs:temp player
+                    $rotate $(head) facing entity @p eyes
+                    $execute store result storage tbs:temp entity_rotation.desired int 1 run data get entity $(head) Rotation[0]
+                    execute store result storage tbs:temp entity_rotation.current int 1 run data get entity @s Rotation[0]
+                    data modify storage tbs:temp entity_rotation.threshold set value 30
+                    execute store result score result tbs.entity_temp run function thebrokenscript:rotation_treshold with storage tbs:temp entity_rotation
+                    # $execute unless score result tbs.entity_temp matches 1 rotated as $(head) run rotate @s ~ 0
+                    $execute unless score result tbs.entity_temp matches 1 at @s rotated as $(head) positioned ^ ^ ^5 rotated as @s positioned ^ ^ ^40 facing entity @s eyes facing ^ ^ ^-1 positioned as @s run rotate @s ~ 0
+            }
+            # item.components."minecraft:custom_model_data".strings[0]
+        }
+    }
+    dir null {
+        dir scare {
+            function summon {
+                execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
+                tag @n[tag=!tbs.spawned,tag=aj.tbs_player.root] add tbs.null_scare
+                tag @n[tag=!tbs.spawned,tag=aj.tbs_player.root] add tbs.spawned
+                playsound thebrokenscript:nullkillsplayer neutral @a ~ ~ ~ 555.0 1.0 0.0
+                execute as @a[distance=0..10] run function thebrokenscript:damage_macro {name:'Null',damage:5}
+            }
+
+        }
+    }
+}

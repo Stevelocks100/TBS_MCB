@@ -1,0 +1,27 @@
+{
+	"tbs_player": {
+		"files": [
+			"assets/animated_java/models/empty.json",
+			"assets/animated_java/textures/blueprint/tbs_player/steve.png",
+			"assets/animated_java/textures/blueprint/tbs_player/null.png",
+			"assets/animated_java/items/blueprint/tbs_player/head1.json",
+			"assets/animated_java/items/blueprint/tbs_player/body.json",
+			"assets/animated_java/items/blueprint/tbs_player/right_arm.json",
+			"assets/animated_java/items/blueprint/tbs_player/left_arm.json",
+			"assets/animated_java/items/blueprint/tbs_player/right_leg.json",
+			"assets/animated_java/items/blueprint/tbs_player/left_leg.json",
+			"assets/animated_java/models/blueprint/tbs_player/head1.json",
+			"assets/animated_java/models/blueprint/tbs_player/body.json",
+			"assets/animated_java/models/blueprint/tbs_player/right_arm.json",
+			"assets/animated_java/models/blueprint/tbs_player/left_arm.json",
+			"assets/animated_java/models/blueprint/tbs_player/right_leg.json",
+			"assets/animated_java/models/blueprint/tbs_player/left_leg.json",
+			"assets/animated_java/models/blueprint/tbs_player/null/head1.json",
+			"assets/animated_java/models/blueprint/tbs_player/null/body.json",
+			"assets/animated_java/models/blueprint/tbs_player/null/right_arm.json",
+			"assets/animated_java/models/blueprint/tbs_player/null/left_arm.json",
+			"assets/animated_java/models/blueprint/tbs_player/null/right_leg.json",
+			"assets/animated_java/models/blueprint/tbs_player/null/left_leg.json"
+		]
+	}
+}
