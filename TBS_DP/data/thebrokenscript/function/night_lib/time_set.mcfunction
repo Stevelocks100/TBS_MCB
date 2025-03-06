@@ -1,5 +1,4 @@
-# Generated with MC-Build
-
+# Created by Stevelocks
 $scoreboard players set desired tbs.moon_event $(time)
 scoreboard players set 24000 tbs.moon_event 24000
 execute store result score current_day tbs.moon_event run time query day

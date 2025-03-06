@@ -2,19 +2,51 @@ function load minecraft:load{
     scoreboard objectives add mcb.internal dummy
     scoreboard objectives add tbs.event_temp dummy
     scoreboard objectives add tbs.moon_event dummy
-    #say Hello World from TBS!
+    scoreboard objectives remove tbs.overlay_lib
+    scoreboard objectives add tbs.overlay_temp dummy
     execute unless score enabled tbs.moon_event = enabled tbs.moon_event run scoreboard players set enabled tbs.moon_event 0
     scoreboard players set 8 tbs.moon_event 8
 }
 
 function tick minecraft:tick {
-    execute as @e[tag=tbs.event.4.fire] at @s run block {
+    execute as @e[tag=tbs.event.4.fire] at @s run {
         scoreboard players add @s tbs.event_temp 1
         execute if score @s tbs.event_temp matches 25.. run fill ~ ~ ~ ~ ~ ~ air replace fire
         execute if score @s tbs.event_temp matches 25.. run kill
     }
     function thebrokenscript:night_lib/main
+    function thebrokenscript:overlay_lib/as_player
 }
+
+advancement nullnullnull {
+	"display": {
+		"background": "minecraft:textures/block/stone.png",
+		"icon": {
+			"id": "minecraft:acacia_boat",
+			"components": {
+				"minecraft:item_model": "aaa"
+			},
+			"count": 1
+		},
+		"title": "nullnullnull",
+		"description": "nullnullnull",
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"nullnullnull_0": {
+			"trigger": "minecraft:impossible"
+		}
+	},
+	"requirements": [
+		[
+			"nullnullnull_0"
+		]
+	]
+}
+
 
 dir events {
 
@@ -22,27 +54,27 @@ dir events {
     function 1 {
 
         schedule 1t {
-            execute as @a at @s rotated as @s run block {
+            execute as @a at @s rotated as @s run {
                         rotate @s 0 0
                         damage @s 1 minecraft:indirect_magic
                     }
 
             schedule 5t {
-                execute as @a at @s rotated as @s run block {
+                execute as @a at @s rotated as @s run {
                         rotate @s 0 -70
                         damage @s 1 minecraft:indirect_magic
                     }
 
                     
                 schedule 5t {
-                    execute as @a at @s rotated as @s run block {
+                    execute as @a at @s rotated as @s run {
                         rotate @s ~65 ~120
                         damage @s 1 minecraft:indirect_magic
                     }
 
 
                     schedule 5t {
-                        execute as @a at @s rotated as @s run block {
+                        execute as @a at @s rotated as @s run {
                             rotate @s ~-90 ~
                             damage @s 1 minecraft:indirect_magic
                     }
@@ -52,7 +84,6 @@ dir events {
         }
     }
 
-
     function 2 {
 
         execute as @a run damage @s 1 minecraft:indirect_magic
@@ -61,7 +92,7 @@ dir events {
 
     function 3 {
 
-        execute as @a at @s run block {
+        execute as @a at @s run {
             playsound thebrokenscript:randomsong neutral @s ~ ~ ~ 555.0 1.0 0.0
             effect give @s blindness 16 1 false
             effect give @s slow_falling 16 1 false
@@ -71,7 +102,7 @@ dir events {
     }
 
     function 4 {
-        execute as @a[nbt={OnGround:1b}] at @s run block {
+        execute as @a[nbt={OnGround:1b}] at @s run {
             summon marker ~ ~ ~ {Tags:["tbs.event.4.fire"]}
             setblock ~ ~ ~ fire
         }
@@ -79,17 +110,13 @@ dir events {
     }
 
     function 5 {
-        execute if predicate {"condition":"minecraft:random_chance","chance":0.5} as @a at @s run block {
+        execute if predicate {"condition":"minecraft:random_chance","chance":0.5} as @a at @s run {
             execute store result storage tbs:temp event.5.x int 1 run random value -10..10
             execute store result storage tbs:temp event.5.z int 1 run random value -10..10
             block offset_lightning { with storage tbs:temp event.5
                 $summon lightning_bolt ~$(x) ~ ~$(z)
             }
         }
-
-
-
-
 
     }
 
@@ -114,14 +141,13 @@ dir events {
 
     function 7 {
         function thebrokenscript:night_lib/time_set {time:13000}
-        execute if predicate {"condition":"minecraft:random_chance","chance":0.5} as @a at @s run block {
+        execute if predicate {"condition":"minecraft:random_chance","chance":0.5} as @a at @s run {
             playsound minecraft:ambient.cave neutral @s ~20 ~ ~ 555.0 1.0 0.0
             playsound thebrokenscript:heartbeat neutral @s ~ ~ ~ 555.0 1.0 0.0
         }
     }
 
     function 8 {
-
     }
 
     function 9 {
@@ -130,26 +156,88 @@ dir events {
 
     function 10 {
         execute store result score #event.10.ui tbs.event_temp run random value 1..3
-        execute as @a at @s run block {
-            execute if items entity @s armor.head * run block {
-                summon item ~ ~ ~ {Item:{id:"minecraft:stick",count:1,components:{item_model:"minecraft:air"}},PickupDelay:0s,Tags:["tbs.event.10.replace"]}
-                data modify entity @n[tag=tbs.event.10.replace] Owner set from entity @s UUID
-                data modify entity @n[tag=tbs.event.10.replace] Item set from entity @s Inventory[{Slot:103b}]
-                item replace entity @s armor.head with air
-            }
-        execute if score #event.10.ui tbs.event_temp matches 1 run item replace entity @s armor.head with minecraft:beetroot_soup[minecraft:equippable={slot:"head",camera_overlay:"thebrokenscript:item/screens/nullinterface1",asset_id:"minecraft:empty"},minecraft:item_model="thebrokenscript:n",minecraft:hide_tooltip={},minecraft:hide_additional_tooltip={},enchantments={binding_curse:1,vanishing_curse:1},enchantment_glint_override=false,custom_data={tbs.event.10.ui:1b}]
-        execute if score #event.10.ui tbs.event_temp matches 2 run item replace entity @s armor.head with minecraft:beetroot_soup[minecraft:equippable={slot:"head",camera_overlay:"thebrokenscript:item/screens/nullinterface2",asset_id:"minecraft:empty"},minecraft:item_model="thebrokenscript:n",minecraft:hide_tooltip={},minecraft:hide_additional_tooltip={},enchantments={binding_curse:1,vanishing_curse:1},enchantment_glint_override=false,custom_data={tbs.event.10.ui:1b}]
-        execute if score #event.10.ui tbs.event_temp matches 3 run item replace entity @s armor.head with minecraft:beetroot_soup[minecraft:equippable={slot:"head",camera_overlay:"thebrokenscript:item/screens/nullinterface3",asset_id:"minecraft:empty"},minecraft:item_model="thebrokenscript:n",minecraft:hide_tooltip={},minecraft:hide_additional_tooltip={},enchantments={binding_curse:1,vanishing_curse:1},enchantment_glint_override=false,custom_data={tbs.event.10.ui:1b}]
-        tag @s add tbs.event.10.has_ui
+        execute as @a at @s run {
+        execute if score #event.10.ui tbs.event_temp matches 1 run function thebrokenscript:overlay_lib/add_overlay {args:{time:100,texture:"thebrokenscript:item/screens/nullinterface1"}}
+        execute if score #event.10.ui tbs.event_temp matches 2 run function thebrokenscript:overlay_lib/add_overlay {args:{time:100,texture:"thebrokenscript:item/screens/nullinterface2"}}
+        execute if score #event.10.ui tbs.event_temp matches 3 run function thebrokenscript:overlay_lib/add_overlay {args:{time:100,texture:"thebrokenscript:item/screens/nullinterface3"}}
 
         }
-        schedule 5s {
-            execute as @a if items entity @s armor.head minecraft:beetroot_soup[custom_data={tbs.event.10.ui:1b}] run item replace entity @s armor.head with air
-            tag @a remove tbs.event.10.has_ui
-        }
-        #give @s minecraft:beetroot_soup[minecraft:equippable={slot:"head",camera_overlay:"thebrokenscript:item/screens/nullinterface1",asset_id:"minecraft:empty"},minecraft:item_model="thebrokenscript:n",minecraft:hide_tooltip={},minecraft:hide_additional_tooltip={}]
+        
     }
 
+    function 11 {
+        execute store result score #event.11.random tbs.event_temp run random value 1..13
+
+        execute if score #event.11.random tbs.event_temp matches 1 run tellraw @a "I see you"
+        execute if score #event.11.random tbs.event_temp matches 2 run tellraw @a "Can you see me?"
+        execute if score #event.11.random tbs.event_temp matches 3 run tellraw @a "I see you"
+        execute if score #event.11.random tbs.event_temp matches 4 run tellraw @a "It was your fault."
+        execute if score #event.11.random tbs.event_temp matches 5 run tellraw @a "Help us."
+        execute if score #event.11.random tbs.event_temp matches 6 run tellraw @a "I am right behind you."
+        execute if score #event.11.random tbs.event_temp matches 7 run tellraw @a {"text":"I am right behind you.","color":"dark_red"}
+        execute if score #event.11.random tbs.event_temp matches 8 run tellraw @a "null"
+        execute if score #event.11.random tbs.event_temp matches 9 run tellraw @a "null.err"
+        execute if score #event.11.random tbs.event_temp matches 10 run tellraw @a "000"
+        execute if score #event.11.random tbs.event_temp matches 11 run tellraw @a {"text":"AAAAAAAAA","color":"white","obfuscated":true}
+        execute if score #event.11.random tbs.event_temp matches 12 run tellraw @a {"text":"Null joined the game","color":"yellow"}
+        execute if score #event.11.random tbs.event_temp matches 13 run tellraw @a {"text":"Null left the game","color":"yellow"}
+    }
+
+    function 12 {
+        execute store result score #event.12.random tbs.event_temp run random value 1..4
+
+        execute if score #event.12.random tbs.event_temp matches 1 as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555 1.0 0.0
+        execute if score #event.12.random tbs.event_temp matches 2 as @a at @s run playsound music_disc.13 neutral @s ~ ~ ~ 555 1.0 0.0
+        execute if score #event.12.random tbs.event_temp matches 3 as @a at @s run playsound music_disc.11 neutral @s ~ ~ ~ 555 1.0 0.0
+        execute if score #event.12.random tbs.event_temp matches 4 run stopsound @a
+
+    }
+
+    function 13 {
+        advancement grant @a only thebrokenscript:nullnullnull
+    }
+
+    function 14 {
+        give @p written_book[written_book_content={pages:["{\"text\":\"null.err.object.err.null.object.alone.3.not.behind.entitytype:player.receiveddata.invalid.reboot.failed.reset.playerdata:00F9219492D94210F812\",\"color\":\"black\"}"],title:"null",author:null}]
+    }
+
+    function 15 {
+    }
+
+    function 16 {
+        title @a times 10 70 20
+        title @a title {"text":"null null null null null null null null","color":"white"}
+    }
+
+    function 17 {
+        execute store result storage tbs:temp event.17.y int 1 run random value 50..60
+        block { with storage tbs:temp event.17
+            $setblock ~ ~$(y) ~ water
+        }
+    }
+
+    function 18 {
+        execute store result storage tbs:temp event.18.y int 1 run random value 50..60
+        block { with storage tbs:temp event.18
+            $setblock ~ ~$(y) ~ bedrock
+        }
+    }
+
+    function 19 {
+        execute store result storage tbs:temp event.19.x int 1 run random value -55..55
+        execute store result storage tbs:temp event.19.z int 1 run random value -55..55
+        execute at @r run block { with storage tbs:temp event.19
+            $summon creeper ~$(x) ~ ~$(z) {Fuse:0,ExplosionRadius:-3}
+        }
+    }
+
+    function 20 {
+        execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+            function thebrokenscript:night_lib/time_set {time:13000}
+        } else run {
+            function thebrokenscript:night_lib/time_set {time:0}
+        }
+    }
 }
 
 
@@ -180,3 +268,262 @@ dir night_lib {
     }
 
 }
+
+dir overlay_lib {
+
+    loot_table player_head {
+	    "type": "minecraft:empty",
+	    "pools": [
+	    	{
+	    		"rolls": 1,
+	    		"entries": [
+	    			{
+	    				"type": "minecraft:item",
+	    				"name": "minecraft:player_head",
+	    				"functions": [
+	    					{
+	    						"function": "minecraft:fill_player_head",
+	    						"entity": "this"
+	    					}
+	    				]
+	    			}
+	    		]
+	    	}
+	    ]
+    }
+
+    predicate head {
+	    "condition": "minecraft:entity_properties",
+	    "entity": "this",
+	    "predicate": {
+	    	"equipment": {
+	    		"head": {
+	    			"components": {
+	    				"minecraft:custom_data": {
+	    					"tbs.overlay_lib.overlay": true
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+    }
+
+    predicate chest {
+	    "condition": "minecraft:entity_properties",
+	    "entity": "this",
+	    "predicate": {
+	    	"equipment": {
+	    		"chest": {
+	    			"components": {
+	    				"minecraft:custom_data": {
+	    					"tbs.overlay_lib.overlay": true
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+    }
+
+    predicate legs {
+	    "condition": "minecraft:entity_properties",
+	    "entity": "this",
+	    "predicate": {
+	    	"equipment": {
+	    		"legs": {
+	    			"components": {
+	    				"minecraft:custom_data": {
+	    					"tbs.overlay_lib.overlay": true
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+    }
+
+    predicate feet {
+	    "condition": "minecraft:entity_properties",
+	    "entity": "this",
+	    "predicate": {
+	    	"equipment": {
+	    		"feet": {
+	    			"components": {
+	    				"minecraft:custom_data": {
+	    					"tbs.overlay_lib.overlay": true
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+    }
+
+    predicate any_of {
+	    "condition": "minecraft:any_of",
+	    "terms": [
+	    	{
+	    		"condition": "minecraft:entity_properties",
+	    		"entity": "this",
+	    		"predicate": {
+	    			"equipment": {
+	    				"head": {
+	    					"components": {
+	    						"minecraft:custom_data": {
+	    							"tbs.overlay_lib.overlay": true
+	    						}
+	    					}
+	    				}
+	    			}
+	    		}
+	    	},
+	    	{
+	    		"condition": "minecraft:entity_properties",
+	    		"entity": "this",
+	    		"predicate": {
+	    			"equipment": {
+	    				"chest": {
+	    					"components": {
+	    						"minecraft:custom_data": {
+	    							"tbs.overlay_lib.overlay": true
+	    						}
+	    					}
+	    				}
+	    			}
+	    		}
+	    	},
+	    	{
+	    		"condition": "minecraft:entity_properties",
+	    		"entity": "this",
+	    		"predicate": {
+	    			"equipment": {
+	    				"legs": {
+	    					"components": {
+	    						"minecraft:custom_data": {
+	    							"tbs.overlay_lib.overlay": true
+	    						}
+	    					}
+	    				}
+	    			}
+	    		}
+	    	},
+	    	{
+	    		"condition": "minecraft:entity_properties",
+	    		"entity": "this",
+	    		"predicate": {
+	    			"equipment": {
+	    				"feet": {
+	    					"components": {
+	    						"minecraft:custom_data": {
+	    							"tbs.overlay_lib.overlay": true
+	    						}
+	    					}
+	    				}
+	    			}
+	    		}
+	    	}
+	    ]
+    }
+
+    function get_name {
+        summon item_display ~ ~ ~ {Tags:["tbs.overlay_lib.player_name"]}
+        loot replace entity @n[tag=tbs.overlay_lib.player_name] contents loot thebrokenscript:overlay_lib/player_head
+        $data modify storage $(storage) $(path) set from entity @n[tag=tbs.overlay_lib.player_name] item.components."minecraft:profile".name
+        kill @n[tag=tbs.overlay_lib.player_name]
+    }
+    
+    function as_player {
+        execute as @a[predicate=thebrokenscript:overlay_lib/any_of] at @s rotated as @s run {
+            function thebrokenscript:overlay_lib/get_name {storage:"tbs:temp",path:"overlay.username"}
+            block update { with storage tbs:temp overlay
+
+            $execute store result score count tbs.overlay_temp run data get storage tbs:temp overlay.players[{username:"$(username)"}].active
+            
+            
+            REPEAT (0,3) as i {
+                execute if score count tbs.overlay_temp matches <%i+1%>.. run {
+                data modify storage tbs:temp overlay.slot set value <%i%>
+                function thebrokenscript:overlay_lib/as_slot with storage tbs:temp overlay
+                }
+            }
+            
+            }
+
+
+
+        }
+    }
+    
+    function as_slot {
+        $tellraw @s[tag=tbs.dev] ["",{"nbt":"overlay.players[{username:\"$(username)\"}].active[$(slot)].time","storage":"tbs:temp"},{"text":" __ "},{"nbt":"overlay.players[{username:\"$(username)\"}].active[$(slot)].image","storage":"tbs:temp"}]
+        # $data modify storage tbs:temp overlay.current set from storage tbs:temp overlay.players[{username:"$(username)"}].active[$(slot)]
+        $data modify storage tbs:temp overlay.players[{username:"$(username)"}].active[$(slot)].slot_num set value $(slot)
+        # $data modify storage tbs:temp overlay.current.username set value "$(username)"
+
+        $execute store result score timer tbs.overlay_temp run data get storage tbs:temp overlay.players[{username:"$(username)"}].active[$(slot)].time
+        execute if score timer tbs.overlay_temp matches ..0 run block { with storage tbs:temp overlay
+            $data modify storage tbs:temp overlay.players[{username:"$(username)"}].active[$(slot)].username set value "$(username)"
+            $function thebrokenscript:overlay_lib/remove_slot with storage tbs:temp overlay.players[{username:"$(username)"}].active[$(slot)]
+        }
+        $execute unless score timer tbs.overlay_temp matches ..0 store result storage tbs:temp overlay.players[{username:"$(username)"}].active[$(slot)].time int 1 run scoreboard players remove timer tbs.overlay_temp 1
+    }
+
+    function remove_slot {
+        # armor.head
+        # armor.chest
+        # armor.legs
+        # armor.feet
+        $execute if predicate thebrokenscript:overlay_lib/$(slot) run item replace entity @s armor.$(slot) with air
+        $data remove storage tbs:temp overlay.players[{username:"$(username)"}].active[$(slot_num)]
+    }
+
+    function add_overlay {
+        # args:
+        #
+        # time: int (ticks)
+        # texture: str (texture path, from assets/<namespace>/textures/<id>)
+        $data modify storage tbs:temp overlay.add set value $(args)
+        function thebrokenscript:overlay_lib/get_name {storage:"tbs:temp",path:"overlay.add.username"}
+        function thebrokenscript:overlay_lib/generate_storage with storage tbs:temp overlay.add
+
+        execute store result score available_slot tbs.overlay_temp run {
+            execute unless predicate thebrokenscript:overlay_lib/head run return 1
+            execute unless predicate thebrokenscript:overlay_lib/chest run return 2
+            execute unless predicate thebrokenscript:overlay_lib/legs run return 3
+            execute unless predicate thebrokenscript:overlay_lib/feet run return 4
+            return 0
+        }
+        execute if score available_slot tbs.overlay_temp matches 1 run data modify storage tbs:temp overlay.add.slot set value "head"
+        execute if score available_slot tbs.overlay_temp matches 2 run data modify storage tbs:temp overlay.add.slot set value "chest"
+        execute if score available_slot tbs.overlay_temp matches 3 run data modify storage tbs:temp overlay.add.slot set value "legs"
+        execute if score available_slot tbs.overlay_temp matches 4 run data modify storage tbs:temp overlay.add.slot set value "feet"
+
+
+
+        execute if score available_slot tbs.overlay_temp matches 0 run return 0
+        block equip_overlay { with storage tbs:temp overlay.add
+
+            $execute if items entity @s armor.$(slot) * run { with storage tbs:temp overlay.add
+                summon item ~ ~ ~ {Item:{id:"minecraft:stick",count:1,components:{item_model:"minecraft:air"}},PickupDelay:0s,Tags:["tbs.overlay_lib.equip_item"]}
+                data modify entity @n[tag=tbs.overlay_lib.equip_item] Owner set from entity @s UUID
+                $item replace entity @n[tag=tbs.overlay_lib.equip_item] contents from entity @s armor.$(slot)
+                $item replace entity @s armor.$(slot) with air
+            }
+
+            $item replace entity @s armor.$(slot) with minecraft:beetroot_soup[\
+            minecraft:equippable={slot:"$(slot)",camera_overlay:"$(texture)",asset_id:"minecraft:empty",equip_sound:{sound_id:"minecraft:block.glass.break",range:0}},\
+            minecraft:item_model="minecraft:air",\
+            minecraft:hide_tooltip={},\
+            minecraft:hide_additional_tooltip={},\
+            enchantments={binding_curse:1,vanishing_curse:1},\
+            enchantment_glint_override=false,\
+            custom_data={tbs.overlay_lib.overlay:1b}\
+            ]
+
+            
+            $data modify storage tbs:temp overlay.players[{username:"$(username)"}].active append value {slot:"$(slot)",image:"$(texture)",time:$(time)}
+        }
+    }
+    function generate_storage {
+        $execute if data storage tbs:temp overlay.players[{username:"$(username)"}] run return 0
+        $data append storage tbs:temp overlay.players append value {username:"$(username)",active:[]}
+    }
+}
+

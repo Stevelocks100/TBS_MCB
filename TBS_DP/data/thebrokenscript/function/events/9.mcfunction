@@ -1,3 +1,2 @@
-# Generated with MC-Build
-
+# Created by Stevelocks
 kill @r[gamemode=!creative,gamemode=!spectator]

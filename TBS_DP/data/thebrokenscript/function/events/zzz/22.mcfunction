@@ -1,7 +1,4 @@
-# Generated with MC-Build
-
-execute if items entity @s armor.head * run function thebrokenscript:events/zzz/23
-execute if score #event.10.ui tbs.event_temp matches 1 run item replace entity @s armor.head with minecraft:beetroot_soup[minecraft:equippable={slot:"head",camera_overlay:"thebrokenscript:item/screens/nullinterface1",asset_id:"minecraft:empty"},minecraft:item_model="thebrokenscript:n",minecraft:hide_tooltip={},minecraft:hide_additional_tooltip={},enchantments={binding_curse:1,vanishing_curse:1},enchantment_glint_override=false,custom_data={tbs.event.10.ui:1b}]
-execute if score #event.10.ui tbs.event_temp matches 2 run item replace entity @s armor.head with minecraft:beetroot_soup[minecraft:equippable={slot:"head",camera_overlay:"thebrokenscript:item/screens/nullinterface2",asset_id:"minecraft:empty"},minecraft:item_model="thebrokenscript:n",minecraft:hide_tooltip={},minecraft:hide_additional_tooltip={},enchantments={binding_curse:1,vanishing_curse:1},enchantment_glint_override=false,custom_data={tbs.event.10.ui:1b}]
-execute if score #event.10.ui tbs.event_temp matches 3 run item replace entity @s armor.head with minecraft:beetroot_soup[minecraft:equippable={slot:"head",camera_overlay:"thebrokenscript:item/screens/nullinterface3",asset_id:"minecraft:empty"},minecraft:item_model="thebrokenscript:n",minecraft:hide_tooltip={},minecraft:hide_additional_tooltip={},enchantments={binding_curse:1,vanishing_curse:1},enchantment_glint_override=false,custom_data={tbs.event.10.ui:1b}]
-tag @s add tbs.event.10.has_ui
+# Created by Stevelocks
+execute if score #event.10.ui tbs.event_temp matches 1 run function thebrokenscript:overlay_lib/add_overlay {args:{time:100,texture:"thebrokenscript:item/screens/nullinterface1"}}
+execute if score #event.10.ui tbs.event_temp matches 2 run function thebrokenscript:overlay_lib/add_overlay {args:{time:100,texture:"thebrokenscript:item/screens/nullinterface2"}}
+execute if score #event.10.ui tbs.event_temp matches 3 run function thebrokenscript:overlay_lib/add_overlay {args:{time:100,texture:"thebrokenscript:item/screens/nullinterface3"}}

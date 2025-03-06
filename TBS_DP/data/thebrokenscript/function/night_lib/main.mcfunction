@@ -1,5 +1,4 @@
-# Generated with MC-Build
-
+# Created by Stevelocks
 execute store result score day tbs.moon_event run time query day
 execute store result score daytime tbs.moon_event run time query daytime
 scoreboard players operation day tbs.moon_event %= 8 tbs.moon_event

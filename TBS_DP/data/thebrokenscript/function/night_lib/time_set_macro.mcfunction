@@ -1,3 +1,2 @@
-# Generated with MC-Build
-
+# Created by Stevelocks
 $time set $(time)
