@@ -20,37 +20,8 @@
               "icon": "lucide-file",
               "title": "null_torture"
             }
-          },
-          {
-            "id": "607cf2bb2b39821a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Events.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Events"
-            }
-          },
-          {
-            "id": "fb8beeee143d71ea",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Overall Mod Appearance.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Overall Mod Appearance"
-            }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -82,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "kill",
+                "query": "?",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -192,24 +163,31 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "fb8beeee143d71ea",
+  "active": "9722977d40e80b64",
   "lastOpenFiles": [
+    "The Broken Script.md",
+    "Entities/NULL_IS_HERE.md",
+    "Entities/EntitySpawner.md",
+    "Entities/CircuitDisguisedAsCreeper.md",
+    "Entities/CIRCUIT_MINESHAFT_STARE.md",
+    "Entities/Circuit.md",
+    "Chatting with Null.md",
+    "Events.md",
+    "Maze Shadow.md",
+    "Entities/Hetzer.md",
+    "Overall Mod Appearance.md",
     "Assets/Pasted image 20250304110533.png",
     "Assets/Pasted image 20250304110658.png",
     "Assets/Pasted image 20250304110522.png",
     "Assets/Screenshot 2025-03-03 at 8.09.22 PM.png",
     "Assets/Screenshot 2025-03-03 at 8.15.54 PM.png",
-    "Events.md",
     "All dead block.md",
     "DImensions/null_torture.md",
     "DImensions/clan_void.md",
-    "Chatting with Null.md",
     "Entities/NULL_FLYING.md",
-    "Maze Shadow.md",
     "Entities/NOTHINGISWATCHINGCHASE.md",
     "Entities/NULL_ENDGAME.md",
     "Entities/NULL_SCARE.md",
-    "Entities/Circuit.md",
     "Entities/Deceiver.md",
     "Entities/Faraway.md",
     "Entities/FalseVillager.md",
@@ -218,12 +196,6 @@
     "Entities/CIRCUIT_STARE.md",
     "Entities/CIRCUIT_MINESHAFT_WALK.md",
     "Entities/Dotsframe1Entity.md",
-    "Entities/CIRCUIT_STALK.md",
-    "Entities/CIRCUIT_MINESHAFT_STARE.md",
-    "Entities/CIRCUIT_JUMPSCARE_FRAME_ENTITY.md",
-    "Entities/OUT_OF_CAVE_CHECK.md",
-    "Entities/CIRCUIT_MINESHAFT_FLEE.md",
-    "Entities/CircuitDisguisedAsCreeper.md",
     "DImensions",
     "Assets/server_mappings.txt",
     "Assets/1.20.1_manifest.json",
