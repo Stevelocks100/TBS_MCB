@@ -20,8 +20,8 @@ on spawn:
 6. [[He]]
 7. [[Faraway]]
 8. [[NOTHINGISWATCHING]]
-9. [[Circuit]] disguised as creeper
-10. Pig circuit [[FalseVillager]]
+9. [[CircuitDisguisedAsCreeper]]
+10. [[PigCircuit]]
 11. [[Hetzer]]
 12. [[THE_BROKEN_END_OVERHAUL_STALK]]
 - vanishes

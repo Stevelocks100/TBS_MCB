@@ -11,3 +11,6 @@ Jframe5entity is same as above.
 may place thebrokenscript:textures/screens/frame5.png on the screen
 
 OOHHH THESE ARE GLITCH RENDERER ENTITIES
+
+
+[[Screens]]

@@ -5,3 +5,6 @@ procedure:
 - 5 more ticks, spawns 4
 - 5 more ticks, spawns 5
 - kills
+
+
+[[Screens]]

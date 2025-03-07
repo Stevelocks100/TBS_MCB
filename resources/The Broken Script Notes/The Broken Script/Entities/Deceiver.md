@@ -12,4 +12,4 @@ upon being spawned:
 
 upon tick update:
 - randomly sets @a to survival
-- may spawn [[Circuit]]
+- may spawn [[Entities/Circuit]]

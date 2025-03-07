@@ -12,9 +12,9 @@ on tick:
 	- play "falsesubwooferlullaby"
 	- set day
 	- stopsound @a after 1k ticks and set midnight
-	- spawn [[Circuit]] disguised as creeper after 1200 ticks
+	- spawn [[Entities/Circuit]] disguised as creeper after 1200 ticks
 - if not 70% chance:
-	- do the same, except spawn normal [[Circuit]]
+	- do the same, except spawn normal [[Entities/Circuit]]
 
 
 ### Appearance

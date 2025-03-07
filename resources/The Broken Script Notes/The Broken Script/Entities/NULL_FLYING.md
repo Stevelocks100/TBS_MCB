@@ -9,7 +9,8 @@ on spawn:
 - big sad
 
 on tick:
-- vanishes if player is within 40?
-- 70% chance to spawn [[NULL_IS_HERE]]
+- vanishes if player is within 40
+	- 70% chance to spawn [[NULL_IS_HERE]]
 - face player within 450 blocks
-- vanish under certain condition
+- vanish when player outside of 350 blocks.
+- appears to creep closer.

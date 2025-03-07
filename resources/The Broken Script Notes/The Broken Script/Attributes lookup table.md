@@ -8,3 +8,9 @@ Attributes.f_22277_ = Health regen(?)
 ![[Screenshot 2025-03-03 at 8.09.22 PM.png]]
 ![[Screenshot 2025-03-03 at 8.09.22 PM.png]]![[Screenshot 2025-03-03 at 8.15.54 PM.png]]
 
+f_19610_ → **Blindness**
+
+• f_19597_ → **Slow Falling**
+
+• f_19591_ → **Slowness**
+

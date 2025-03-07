@@ -1,5 +1,4 @@
 # Created by Stevelocks
-$rotate $(head) facing entity @p eyes
 $execute store result storage tbs:temp entity_rotation.desired int 1 run data get entity $(head) Rotation[0]
 execute store result storage tbs:temp entity_rotation.current int 1 run data get entity @s Rotation[0]
 data modify storage tbs:temp entity_rotation.threshold set value 30

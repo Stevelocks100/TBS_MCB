@@ -1,3 +1,3 @@
 
 
-Appearance of [[Circuit]] in caves
+Appearance of [[Entities/Circuit]] in caves
