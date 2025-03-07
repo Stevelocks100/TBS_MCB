@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "All dead block.md",
+                "file": "Overall Mod Appearance.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "All dead block"
+              "title": "Overall Mod Appearance"
             }
           }
         ],
@@ -194,9 +194,14 @@
   },
   "active": "fb8beeee143d71ea",
   "lastOpenFiles": [
+    "Assets/Pasted image 20250304110533.png",
+    "Assets/Pasted image 20250304110658.png",
+    "Assets/Pasted image 20250304110522.png",
+    "Assets/Screenshot 2025-03-03 at 8.09.22 PM.png",
+    "Assets/Screenshot 2025-03-03 at 8.15.54 PM.png",
     "Events.md",
-    "DImensions/null_torture.md",
     "All dead block.md",
+    "DImensions/null_torture.md",
     "DImensions/clan_void.md",
     "Chatting with Null.md",
     "Entities/NULL_FLYING.md",
@@ -219,13 +224,7 @@
     "Entities/OUT_OF_CAVE_CHECK.md",
     "Entities/CIRCUIT_MINESHAFT_FLEE.md",
     "Entities/CircuitDisguisedAsCreeper.md",
-    "The Broken Script.md",
     "DImensions",
-    "Pasted image 20250304110658.png",
-    "Pasted image 20250304110533.png",
-    "Pasted image 20250304110522.png",
-    "Screenshot 2025-03-03 at 8.15.54 PM.png",
-    "Screenshot 2025-03-03 at 8.09.22 PM.png",
     "Assets/server_mappings.txt",
     "Assets/1.20.1_manifest.json",
     "Assets/version_manifest.json",

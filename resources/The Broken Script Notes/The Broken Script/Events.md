@@ -88,7 +88,7 @@ regardless, there are 58 events.
 44. spawns eye particles
 45. plays "textmadness1", rotate 5°
 46. opens doors within 6 block range
-47. plays "moonglitch". is this where the moon tweaks out???
+47. plays "moonglitch", and changes render distance to 2
 48. give [[WhyCantYouLeave effect]] for 1000 ticks, amp 1.
 49. grant advancement "can_someone_hear_me"
 50. spawn [[FalseVillager]] x+40, 100, z
