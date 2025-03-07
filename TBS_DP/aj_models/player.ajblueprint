@@ -3,7 +3,7 @@
 		"format": "animated_java_blueprint",
 		"format_version": "1.6.4",
 		"uuid": "da3a8b42-b197-5f26-1b2b-f40c0d5c40bc",
-		"save_location": "/Users/School/Library/Application Support/minecraft/1.21.4/saves/TBS/datapacks/TBS_DP/aj_models/player.ajblueprint",
+		"save_location": "C:\\Users\\taylo\\OneDrive\\Documents\\1.21.4\\saves\\TBS creation\\datapacks\\TBS_DP\\aj_models\\player.ajblueprint",
 		"last_used_export_namespace": "tbs_player"
 	},
 	"blueprint_settings": {
@@ -18,9 +18,9 @@
 		"display_item": "minecraft:white_dye",
 		"custom_model_data_offset": 0,
 		"enable_advanced_resource_pack_settings": false,
-		"resource_pack": "/Users/School/Library/Application Support/minecraft/1.21.4/resourcepacks/TBS_RP",
+		"resource_pack": "C:\\Users\\taylo\\OneDrive\\Documents\\1.21.4\\resourcepacks\\TBS_RP",
 		"enable_advanced_data_pack_settings": false,
-		"data_pack": "/Users/School/Library/Application Support/minecraft/1.21.4/saves/TBS/datapacks/TBS_DP",
+		"data_pack": "C:\\Users\\taylo\\OneDrive\\Documents\\1.21.4\\saves\\TBS creation\\datapacks\\TBS_DP",
 		"summon_commands": "",
 		"ticking_commands": "",
 		"interpolation_duration": 1,

@@ -1,0 +1,14 @@
+{
+    "placement": {
+        "type": "minecraft:random_spread",
+        "salt": 20083232,
+        "separation": 0,
+        "spacing": 1
+    },
+    "structures": [
+        {
+            "structure": "thebrokenscript:clan_void",
+            "weight": 1
+        }
+    ]
+}

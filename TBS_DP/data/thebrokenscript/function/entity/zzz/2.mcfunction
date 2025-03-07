@@ -1,2 +1,2 @@
 # Created by Stevelocks
-$rotate $(head) facing entity @p eyes
+$rotate $(head) $(target)

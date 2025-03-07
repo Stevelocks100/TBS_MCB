@@ -62,7 +62,7 @@ regardless, there are 58 events.
 21. spawn [[NULL_SCARE]] within a 5 block radius of the player (y included). sets a random rotation. Also seems to change player HP by -10..10
 22. Gives a single item to the player. This item is unknown. disc 11?
 23. May modify the velocity of the player? however the player field isn't used. either way, causes the entity to face 5.0F. may teleport to y=60
-24. places "all_dead", which is a black cube.
+24. places [[All dead block]], which is a black cube.
 25. places an unknown block
 26. same
 27. same, another also has 27, which modifies a writeable contents block

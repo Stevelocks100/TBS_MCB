@@ -1,0 +1,15 @@
+{
+    "name": "thebrokenscript:clan_void",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "element_type": "minecraft:single_pool_element",
+                "projection": "rigid",
+                "location": "thebrokenscript:null_torture/main",
+                "processors": "minecraft:empty"
+            }
+        }
+    ]
+}
