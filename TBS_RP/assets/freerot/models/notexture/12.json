@@ -1,0 +1,45 @@
+{
+	"textures": {
+		"0": "thebrokenscript:item/notexture"
+	},
+	"elements": [
+		{
+			"from": [7.5, 5.45, 7.5],
+			"to": [8.5, 10.55, 8.5],
+			"light_emission": 0,
+			"faces": {
+				"north": {
+					"uv": [9.25, 12, 9.5, 13.25],
+					"texture": "#0"
+				},
+				"east": {
+					"uv": [9, 12, 9.25, 13.25],
+					"texture": "#0"
+				},
+				"south": {
+					"uv": [9.75, 12, 10, 13.25],
+					"texture": "#0"
+				},
+				"west": {
+					"uv": [9.5, 12, 9.75, 13.25],
+					"texture": "#0"
+				},
+				"up": {
+					"uv": [9.5, 12, 9.25, 11.75],
+					"texture": "#0"
+				},
+				"down": {
+					"uv": [9.75, 11.75, 9.5, 12],
+					"texture": "#0"
+				}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"rotation": [132.5, 0, -167.5],
+			"translation": [-6.53165, 17.16135, -8.63089],
+			"scale": [1, 1, 1]
+		}
+	}
+}

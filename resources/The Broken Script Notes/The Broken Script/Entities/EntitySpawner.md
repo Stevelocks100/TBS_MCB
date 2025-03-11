@@ -25,3 +25,4 @@ on spawn:
 11. [[Hetzer]]
 12. [[THE_BROKEN_END_OVERHAUL_STALK]]
 - vanishes
+(circuit_stalk, circuit_mineshaft_stare)

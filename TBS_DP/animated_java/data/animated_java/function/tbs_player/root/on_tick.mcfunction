@@ -2,6 +2,7 @@
 execute unless entity @s[tag=aj.tbs_player.root] run return 0
 function #animated_java:tbs_player/as_root/pre_tick
 execute if entity @s[tag=aj.tbs_player.animation.idle.playing] run function animated_java:tbs_player/animations/idle/zzz/on_tick
+execute if entity @s[tag=aj.tbs_player.animation.angry_curved_idle.playing] run function animated_java:tbs_player/animations/angry_curved_idle/zzz/on_tick
 execute if entity @s[tag=aj.tbs_player.animation.walk.playing] run function animated_java:tbs_player/animations/walk/zzz/on_tick
 execute on passengers if entity @s[tag=aj.tbs_player.data] run function animated_java:tbs_player/root/zzz/0
 execute at @s on passengers run rotate @s ~ ~

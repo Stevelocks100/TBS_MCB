@@ -62,8 +62,8 @@ regardless, there are 58 events.
 21. spawn [[NULL_SCARE]] within a 5 block radius of the player (y included). sets a random rotation. Also seems to change player HP by -10..10
 22. Gives a single item to the player. This item is unknown. disc 11?
 23. May modify the velocity of the player? however the player field isn't used. either way, causes the entity to face 5.0F. may teleport to y=60
-24. places [[All dead block]], which is a black cube.
-25. places an unknown block
+24. places [[All dead block]], which is a black cube. (at base)
+25. places an unknown block. netherrack?
 26. same
 27. same, another also has 27, which modifies a writeable contents block
 28. Might be a time jump between 1..10000
@@ -73,7 +73,7 @@ regardless, there are 58 events.
 32. places "hello"
 33. places "empty", similar to all_dead
 34. Multiple things occur.
-	1. Opens a GUI. May be a GUI with two labels both reading "good luck"
+	1. Opens a GUI. May be a GUI with two labels both reading "good luck" and "=)"
 	2. sets time to midnight
 	3. plays sound "glithcsound1" nice spelling bro
 35. Summons [[NULL_INVADE_BASE]]

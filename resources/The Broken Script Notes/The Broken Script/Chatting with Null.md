@@ -28,7 +28,7 @@ null
 \<Null> The end is nigh
 (wait 1 second)
 *cave ambience*
-\<Null> The end is nigh
+\<Null> The end is null
 (wait 0.5 seconds)
 Spawns [[NULLL]]
 ***

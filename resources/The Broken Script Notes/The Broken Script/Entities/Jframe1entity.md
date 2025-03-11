@@ -13,4 +13,6 @@ may place thebrokenscript:textures/screens/frame5.png on the screen
 OOHHH THESE ARE GLITCH RENDERER ENTITIES
 
 
+dies after 10 ticks.
+
 [[Screens]]

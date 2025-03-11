@@ -1,0 +1,11 @@
+{
+    "model": {
+        "type": "minecraft:special",
+        "model": {
+            "type": "minecraft:head",
+            "kind": "player",
+            "texture": "thebrokenscript:heads/curved"
+        },
+        "base": "minecraft:block/block"
+    }
+}

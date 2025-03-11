@@ -1,0 +1,6 @@
+{
+	"parent": "animated_java:blueprint/thebrokenend/bone6",
+	"textures": {
+		"1": "animated_java:blueprint/thebrokenend/brokenendoverhaulangry"
+	}
+}

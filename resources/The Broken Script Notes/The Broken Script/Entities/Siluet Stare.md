@@ -11,8 +11,21 @@ procedure 1:
 - after 18k ticks, spawn [[Siluet Chase]]
 - if no player, remove.
 
+^^ probably spawn
+
+
+
 procedure 2:
-- face closest player within 1k blocks
-- if player within 20 blocks, 50% chance to vanish, and spawn [[Strike]], and spawn [[Siluet Chase]]
-- otherwise remove and play "textmadness1" and spawn [[CANT_YOU_SEE]]
-- also spawns null particles
+- if player looking at it:
+	- 50% chance to
+		- spawn [[Strike]]
+		- despawn
+		- spawn [[Siluet Chase]]
+	- else
+		- remove
+		- play "textmadness1"
+		- spawn [[CANT_YOU_SEE]]
+- slowly creep towards player
+- ^^ also do this stuff if within 20 blocks. or maybe within 20 blocks as a whole instead of look.
+
+^^ probably tick

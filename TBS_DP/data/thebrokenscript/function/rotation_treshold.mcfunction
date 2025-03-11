@@ -20,6 +20,6 @@ scoreboard players operation d tbs.threshold_temp = t1 tbs.threshold_temp
 scoreboard players operation d tbs.threshold_temp -= t2 tbs.threshold_temp
 execute if score d tbs.threshold_temp matches ..-1 run scoreboard players operation d tbs.threshold_temp *= -1 tbs.threshold_temp
 scoreboard players operation d tbs.threshold_temp %= 360 tbs.threshold_temp
-execute if score d tbs.threshold_temp matches 181.. run function thebrokenscript:zzz/1
+execute if score d tbs.threshold_temp matches 181.. run function thebrokenscript:zzz/11
 $execute if score d tbs.threshold_temp matches ..$(threshold) run return 1
 return 0

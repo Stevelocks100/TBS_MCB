@@ -6,7 +6,7 @@ procedure:
 - randomizes between 1..43 structures. closer to 48, given some dumb if mistakes.
 1. thedoor, 50% chance for a variant. oak planks surrounding an oak door
 2. structure1. strange assortment of cobblestone. 50% to randomize direction again.
-3. sign5
+3. sign5 (3 - 7 likely being base)
 4. sign4
 5. sign3
 6. sign2
@@ -19,7 +19,7 @@ procedure:
 13. dirtpillar
 14. cross
 15. cobledpillar
-16. 2bedrocks
+16. 2bedrocks (close to base)
 17. gift
 18. glasspillar
 19. stoneaslym

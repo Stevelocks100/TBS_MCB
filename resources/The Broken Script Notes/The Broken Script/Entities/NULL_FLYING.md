@@ -13,4 +13,4 @@ on tick:
 	- 70% chance to spawn [[NULL_IS_HERE]]
 - face player within 450 blocks
 - vanish when player outside of 350 blocks.
-- appears to creep closer.
+- appears to creep closer. not.

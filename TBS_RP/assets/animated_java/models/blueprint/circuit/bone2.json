@@ -1,0 +1,43 @@
+{
+	"textures": {
+		"0": "animated_java:blueprint/circuit/circuit",
+		"particle": "minecraft:item/pufferfish"
+	},
+	"display": {
+		"head": {
+			"rotation": [0, 180, 0]
+		}
+	},
+	"elements": [
+		{
+			"from": [8, -14.94737, 8],
+			"to": [12.21053, 9.05263, 8],
+			"faces": {
+				"north": {
+					"uv": [2.5, 0, 3.75, 7.125],
+					"texture": "#0"
+				},
+				"east": {
+					"uv": [0, 0, 0, 7.125],
+					"texture": "#0"
+				},
+				"south": {
+					"uv": [3.75, 0, 2.5, 7.125],
+					"texture": "#0"
+				},
+				"west": {
+					"uv": [0, 0, 0, 7.125],
+					"texture": "#0"
+				},
+				"up": {
+					"uv": [1.25, 0, 0, 0],
+					"texture": "#0"
+				},
+				"down": {
+					"uv": [1.25, 0, 0, 0],
+					"texture": "#0"
+				}
+			}
+		}
+	]
+}

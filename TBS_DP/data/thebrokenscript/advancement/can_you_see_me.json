@@ -1,0 +1,1 @@
+{"display":{"background": "minecraft:textures/block/stone.png","icon":{"id": "minecraft:black_concrete","count": 1},"title": "Here I am.","description": "Can you see me?","frame": "task","show_toast": true,"announce_to_chat": true,"hidden": false},"criteria":{"can_you_see_me_0":{"trigger": "minecraft:impossible"}}}

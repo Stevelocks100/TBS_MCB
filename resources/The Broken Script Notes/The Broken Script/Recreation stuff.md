@@ -51,3 +51,10 @@ overlay:{
 	]
 }
 ```
+
+
+
+
+
+For detecting a player's base:
+at a random interval, summon a marker. if there's one within 30 blocks, kill the other, and add a score to this one. if one has gone too long without another marker being close, get rid of it.

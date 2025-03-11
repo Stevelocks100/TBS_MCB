@@ -1,0 +1,43 @@
+{
+	"textures": {
+		"1": "animated_java:blueprint/thebrokenend/brokenendoverhaulcalm",
+		"particle": "minecraft:item/pufferfish"
+	},
+	"display": {
+		"head": {
+			"rotation": [0, 180, 0]
+		}
+	},
+	"elements": [
+		{
+			"from": [2.81818, -16, 8],
+			"to": [10.45455, 8, 8],
+			"faces": {
+				"north": {
+					"uv": [5.46875, 5.875, 6.34375, 8.625],
+					"texture": "#1"
+				},
+				"east": {
+					"uv": [0, 0, 0, 2.75],
+					"texture": "#1"
+				},
+				"south": {
+					"uv": [6.34375, 5.875, 7.21875, 8.625],
+					"texture": "#1"
+				},
+				"west": {
+					"uv": [0, 0, 0, 2.75],
+					"texture": "#1"
+				},
+				"up": {
+					"uv": [0.875, 0, 0, 0],
+					"texture": "#1"
+				},
+				"down": {
+					"uv": [0.875, 0, 0, 0],
+					"texture": "#1"
+				}
+			}
+		}
+	]
+}

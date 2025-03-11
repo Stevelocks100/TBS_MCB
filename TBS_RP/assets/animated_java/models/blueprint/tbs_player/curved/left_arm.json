@@ -1,0 +1,6 @@
+{
+	"parent": "animated_java:blueprint/tbs_player/left_arm",
+	"textures": {
+		"0": "animated_java:blueprint/tbs_player/curvedangry"
+	}
+}

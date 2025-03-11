@@ -1,0 +1,1 @@
+{"criteria":{"a":{"trigger": "minecraft:entity_killed_player","conditions":{"entity":{"nbt": "{Tags:[\"tbs.entity\"]}"}}}},"requirements": [["a"]],"rewards":{"function": "thebrokenscript:entity/got_killed"}}

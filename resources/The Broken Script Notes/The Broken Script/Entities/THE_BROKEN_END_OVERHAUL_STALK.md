@@ -7,10 +7,15 @@ generic hurt sounds, immune to damage.
 on spawn:
 - sets weather to rainy
 - kill after 18000 ticks
-- check for player within 150 blocks
-- if a player is within 3 blocks, 70% chance to despawn, stopsound @a, then wait 500 ticks to spawn [[THE_BROKEN_END]] (angry?)
-- otherwise simply despawns, and places "physical stacktrace" block
 
+on tick:
+- if player looking at it
+	- 70% to
+		- stopsound @a
+		- despawn
+		- spawn [[THE_BROKEN_END]] after 500 ticks
+	- else
+		- remove and place physical stacktrace
 
 
 

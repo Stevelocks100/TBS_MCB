@@ -11,7 +11,7 @@ on tick:
 - every 15 ticks it teleports ^ ^ ^10, 10% chance to teleport to player Y
 - gets speed 1 for 10 ticks
 - gamemode survival @a
-- runs one of 16 titles, all in white. These have a 50% chance per tick
+- runs one of 14 titles, all in white. These have a 50% chance per tick
 	- You know nothing
 	- Worship me
 	- Follow me

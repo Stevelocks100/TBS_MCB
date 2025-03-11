@@ -15,11 +15,19 @@ animations are mostly nothing, with the exception of chase and angry idle shakin
 		- drops 16 occasionally
 		- stops all sounds
 		- drops other items, which cannot be determined. appears to be hardcoded, and not a datapack feature. appears to be a random assortment of cobblestone, redstone torches, and stone tools.
-		- sends into chat: "DyeXD412 was slain by (player)" and "DyeXD412" left the game
-	- upon being spawned:
-		- plays a sound called "youknownothing"
-		- breaks blocks under [[Circuit Breakable]]
-	- executes something upon killing another player, but cannot be determined.
+		- sends into chat: "DyeXD412 was slain by (player)" and "DyeXD412" left the game (after 100 ticks)
+^^ ignore
+
+on spawn:
+-  plays a sound called "youknownothing"
+- breaks blocks under [[Circuit Breakable]]
+
+on tick:
+- plays "curved_spawn"
+- breaks [[Circuit Breakable]] nearby
+- despawns after 1200 ticks.
+- spawns "PARTICLE_OF_CURVED" particles
+- despawns if player has certain gamemode?
 
 
 Curved appearance shown below
@@ -27,5 +35,5 @@ Curved appearance shown below
 
 
 
-
-[[More Information Needed]]
+loot table: excluding netherite sword
+![[Screenshot 2025-03-08 at 3.13.20 PM.png]]

@@ -1,18 +1,28 @@
-function load minecraft:load{
+
+function load thebrokenscript:load{
     scoreboard objectives add mcb.internal dummy
     scoreboard objectives add tbs.event_temp dummy
     scoreboard objectives add tbs.moon_event dummy
     scoreboard objectives add tbs.entity_temp dummy
     scoreboard objectives add tbs.null_torture dummy
     scoreboard objectives add tbs.clan_void dummy
-
+    scoreboard objectives add tbs.day_b dummy
+    scoreboard objectives add tbs.particle_temp dummy
+    scoreboard objectives add tbs.entity_checker dummy
+    scoreboard objectives add tbs.base_detect dummy
+    scoreboard objectives add tbs.base_detect_timer dummy
+    scoreboard objectives add tbs.despawn_timer dummy
+    scoreboard objectives add tbs.particle_decay dummy
     scoreboard objectives remove tbs.overlay_lib
     scoreboard objectives add tbs.overlay_temp dummy
+    scoreboard objectives add tbs.entity_motion1 dummy
+    scoreboard objectives add tbs.entity_motion2 dummy
+    scoreboard objectives add tbs.fake_ban dummy
     execute unless score enabled tbs.moon_event = enabled tbs.moon_event run scoreboard players set enabled tbs.moon_event 0
     scoreboard players set 8 tbs.moon_event 8
 }
 
-function tick minecraft:tick {
+function tick thebrokenscript:tick {
     execute as @e[tag=tbs.event.4.fire] at @s run {
         scoreboard players add @s tbs.event_temp 1
         execute if score @s tbs.event_temp matches 25.. run fill ~ ~ ~ ~ ~ ~ air replace fire
@@ -20,18 +30,146 @@ function tick minecraft:tick {
     }
     function thebrokenscript:night_lib/main
     function thebrokenscript:overlay_lib/as_player
-    function thebrokenscript:entity/player
     execute as @e[tag=tbs.entity] at @s rotated as @s run function thebrokenscript:entity/entity_tick
+    function thebrokenscript:entity/player
     execute in thebrokenscript:clan_void at @p as @n[tag=tbs.clan_void.structure] at @s run function thebrokenscript:clan_void/randomize_structure
     execute in thebrokenscript:null_torture at @p as @n[tag=tbs.null_torture.structure_jigsaw] at @s run function thebrokenscript:null_torture/randomize_structure
 
     kill @n[tag=tbs.null_torture.structure]
 
-    REPEAT (['null_torture','clan_void']) as dimension {
+    REPEAT (['null_torture','clan_void','day_b']) as dimension {
         scoreboard players add @a[nbt={Dimension:"thebrokenscript:<%dimension%>"}] tbs.<%dimension%> 1
         execute as @a[scores={tbs.<%dimension%>=1200..}] at @s run function thebrokenscript:<%dimension%>/leave with storage tbs:temp <%dimension%>
     }
     execute as @e[tag=tbs.block] at @s run function thebrokenscript:blocks/tick/tick
+
+    execute as @n[tag=tbs.chunk_remover] at @s run {
+      fill ~ ~ ~ ~15 ~6 ~15 air
+      execute store result score chunk_y tbs.entity_temp run data get entity @s Pos[1]
+      execute if score chunk_y tbs.entity_temp matches 308..318 run {
+        fill ~ ~ ~ ~15 319 ~15 air
+        kill @s
+      }
+      tp @s ~ ~7 ~
+    }
+    scoreboard players add @a[scores={tbs.fake_ban=0..}] tbs.fake_ban 1
+    scoreboard players set @a[scores={tbs.fake_ban=3..}] tbs.fake_ban -1
+    kick @a[scores={tbs.fake_ban=1}] You are not whitelisted on this server.
+    kick @a[scores={tbs.fake_ban=2}] Normally, this is a ban. Instead just rejoin.
+
+    scoreboard players remove @e[tag=tbs.particles] tbs.particle_decay 1
+    kill @e[tag=tbs.particles,scores={tbs.particle_decay=..0}]
+
+    execute as @e[tag=tbs.structure.all_dead_replacer] at @s run {
+      fill ~-8 ~-8 ~-8 ~8 ~8 ~8 repeating_command_block{Command: "function thebrokenscript:blocks/place/all_dead",auto:1b} replace dead_fire_coral_block
+      fill ~-8 ~-8 ~-8 ~8 ~8 ~8 repeating_command_block{Command: "function thebrokenscript:blocks/place/oldblock",auto:1b} replace dead_brain_coral_block
+
+      kill
+    }
+
+    execute if predicate {"condition":"minecraft:random_chance","chance":0.0001} at @r run {
+      summon marker ~ ~ ~ {Tags:["tbs.structure_spawner"]}
+      spreadplayers ~ ~ 2 80 false @n[tag=tbs.structure_spawner]
+      execute store result score struct tbs.entity_temp run random value 1..28
+      
+      execute at @n[tag=tbs.structure_spawner] if score struct tbs.entity_temp matches 24 positioned ~ ~60 ~ run place template thebrokenscript:random/crossfly
+      REPEAT ({1:"portal1",2:"smallfractal",3:"treewithnoleaves",4:"treetop",5:"trap2",6:"trap1",7:"totem",8:"thedoor",9:"structure1",10:"stoneaslym",11:"signabomination",12:"sandpillar",13:"randomwoodstructure",14:"randomstructurecobbled",15:"randombrickstructure",16:"house3",17:"house2",18:"house1",19:"heavenportal",20:"glasspillar",21:"generationbug1",22:"doortrap",23:"dirtpillar",25:"crosses",26:"baseruins",27:"baserestored"}) as i,struct {
+        execute at @n[tag=tbs.structure_spawner] if score struct tbs.entity_temp matches <%i%> run place template thebrokenscript:random/<%struct%>
+      }
+      execute at @n[tag=tbs.structure_spawner] if score struct tbs.entity_temp matches 28 run function thebrokenscript:destroy_chunk
+      kill @n[tag=tbs.structure_spawner]
+    }
+
+    execute as @e[tag=tbs.sign] at @s run function thebrokenscript:sign_comms/as_sign
+
+    execute if score enabled tbs.moon_event matches 1 if predicate {"condition":"minecraft:random_chance","chance":0.0004} as @e[type=#thebrokenscript:despawnable,limit=30,nbt={PersistenceRequired:0b}] run {
+      tp @s ~ ~-1000 ~
+      kill
+    }
+    scoreboard objectives add tbs.replace_temp dummy
+    execute as @e[type=#thebrokenscript:despawnable,tag=!tbs.entity.replace_checked,limit=30,nbt={PersistenceRequired:0b}] at @s run {
+      tag @s add tbs.entity.replace_checked
+      execute store result score @s tbs.replace_temp run random value 1..250
+
+      execute if predicate thebrokenscript:on_surface if score @s tbs.replace_temp matches 1..3 positioned ~ ~30 ~ run function thebrokenscript:entity/null/null_flying_summon
+      execute if predicate thebrokenscript:on_surface if score @s tbs.replace_temp matches 4..8 run function thebrokenscript:entity/null/null_watching_summon
+      execute if predicate thebrokenscript:on_surface if score @s tbs.replace_temp matches 9..13 run function thebrokenscript:entity/siluet/stare_summon
+      execute if predicate thebrokenscript:on_surface if score @s tbs.replace_temp matches 14..15 run function thebrokenscript:entity/deceiver_summon
+      execute if predicate thebrokenscript:on_surface if score @s tbs.replace_temp matches 16 run function thebrokenscript:entity/notexture_summon
+      execute if predicate thebrokenscript:on_surface if score @s tbs.replace_temp matches 17..22 run function thebrokenscript:entity/faraway_summon
+      execute if predicate thebrokenscript:on_surface if score @s tbs.replace_temp matches 23 run function thebrokenscript:entity/thebrokenend/stalk_summon
+      execute if predicate {"condition":"minecraft:location_check","predicate":{"light":{"light":{"min":0,"max":5}},"can_see_sky":false}} if score @s tbs.replace_temp matches 24 run function thebrokenscript:entity/circuit/circuit_stalk_summon
+      execute if predicate {"condition":"minecraft:location_check","predicate":{"light":{"light":{"min":0,"max":5}},"can_see_sky":false}} if score @s tbs.replace_temp matches 25 run function thebrokenscript:entity/circuit/circuit_mineshaft_walk_summon
+      execute if predicate {"condition":"minecraft:location_check","predicate":{"light":{"light":{"min":0,"max":5}},"can_see_sky":false}} if score @s tbs.replace_temp matches 26 run function thebrokenscript:entity/circuit/circuit_disguised_as_creeper_summon
+      execute if score @s tbs.replace_temp matches 1..10 run {
+        tp @s ~ ~-1000 ~
+        kill
+      }
+      
+    }
+    scoreboard objectives remove tbs.replace_temp
+
+    execute if predicate {"condition":"minecraft:random_chance","chance":0.0003} run function thebrokenscript:random_event
+
+    function thebrokenscript:entity_check
+    function thebrokenscript:base_detect/tick
+
+    execute as @a at @s if block ~ ~ ~ #minecraft:beds if predicate thebrokenscript:sleep_condition run {
+      REPEAT ({notexture:"texture",null:"null",siluet:"soul",thebrokenend:"endisnear"}) as entity,message{
+        execute if score <%entity%> tbs.entity_checker matches 1 run title @s times 0 70 10
+        execute if score <%entity%> tbs.entity_checker matches 1 run title @s actionbar "err.<%message%>"
+      }
+      execute if score enabled tbs.moon_event matches 1 run title @s times 0 70 10
+      execute if score enabled tbs.moon_event matches 1 run title @s actionbar "err.themoon"
+    }
+
+    execute at @a run fill ~-5 ~-5 ~-5 ~5 ~5 ~5 stone replace deepslate
+
+    execute as @e[type=villager,tag=!tbs.entity.testificate_check] at @s run {
+      tag @s add tbs.entity.testificate_check
+      execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run {
+        function thebrokenscript:entity/circuit/false_villager_summon
+        data modify entity @n[tag=tbs.testificate] Age set from entity @s Age
+        tp @s ~ ~-1000 ~
+        kill
+      }
+    }
+}
+
+function entity_check {
+  # tbs.entity_checker
+
+  # simple entities
+  REPEAT (['notexture','curved','deceiver','faraway']) as i {
+    execute store result score <%i%> tbs.entity_checker if entity @n[tag=tbs.<%i%>]
+  }
+
+  # compound entities
+
+  # siluet
+  scoreboard players set siluet tbs.entity_checker 0
+  REPEAT (['siluet','siluet_stare']) as i {
+    execute if entity @n[tag=tbs.<%i%>] run scoreboard players set siluet tbs.entity_checker 1
+  }
+
+  # the broken end
+  scoreboard players set thebrokenend tbs.entity_checker 0
+  REPEAT (['thebrokenend','thebrokenend_stalk']) as i {
+    execute if entity @n[tag=tbs.<%i%>] run scoreboard players set thebrokenend tbs.entity_checker 1
+  }
+
+  # circuit
+  scoreboard players set circuit tbs.entity_checker 0
+  REPEAT (['circuit','circuit_stalk','circuit_mineshaft_flee','circuit_disguised_as_creeper','false_villager']) as i {
+    execute if entity @n[tag=tbs.<%i%>] run scoreboard players set circuit tbs.entity_checker 1
+  }
+
+  # null
+  scoreboard players set null tbs.entity_checker 0
+  REPEAT (['null_flying','null_watching','null_is_here','nulll','null_invade_base','null_endgame','null_scare']) as i {
+    execute if entity @n[tag=tbs.<%i%>] run scoreboard players set null tbs.entity_checker 1
+  }
+
 }
 
 function damage_macro {
@@ -104,6 +242,39 @@ advancement nullnullnull {
 	]
 }
 
+advancement can_someone_hear_me {
+	"display": {
+		"background": "minecraft:textures/block/stone.png",
+		"icon": {
+			"id": "minecraft:obsidian",
+			"count": 1
+		},
+		"title": "Go away",
+		"description": "This place is not for you.",
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"can_someone_hear_me_0": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}
+
+function shit_gets_real {
+  REPEAT (1,54) as i {
+    function thebrokenscript:events/<%i%>
+  }
+}
+
+function random_event {
+  execute store result score random tbs.event_temp run random value 1..54
+  REPEAT (1,54) as i {
+    execute if score random tbs.event_temp matches <%i%> run function events/<%i%>
+  }
+}
 
 dir events {
 
@@ -314,7 +485,162 @@ dir events {
     }
 
     function 24 {
-        
+        execute at @n[tag=tbs.base_found,sort=random] run function thebrokenscript:blocks/place/all_dead
+    }
+
+    function 25 {
+        execute at @n[tag=tbs.base_found,sort=random] run setblock ~ ~ ~ netherrack
+    }
+
+    function 26 {
+      # places unknown block, so instead it's magma
+      execute at @n[tag=tbs.base_found,sort=random] run setblock ~ ~ ~ magma_block
+    }
+
+    function 27 {
+      # fully unknown too, so instead soul sand
+      execute at @n[tag=tbs.base_found,sort=random] run setblock ~ ~ ~ soul_sand
+    }
+
+    function 28 {
+      execute store result storage tbs:temp event.28.time int 1 run random value 1..10000
+      block { with storage tbs:temp event.28
+        $function thebrokenscript:night_lib/time_set {time:$(time)}
+      }
+    }
+
+    function 29 {
+      # fully unknown. maybe set motion?
+      scoreboard players set $x player_motion.api.launch 1000
+      scoreboard players set $y player_motion.api.launch 1000
+      scoreboard players set $z player_motion.api.launch 1000
+      execute as @a at @s run function player_motion:api/launch_xyz
+    }
+
+    function 30 {
+      # name: str, either null or eyes
+      # count: number of particles, positive integer
+      # distx: positive integer
+      # disty
+      # distz
+      execute at @r positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"null",count:10,distx:2,disty:2,distz:2}
+    }
+
+    function 31 {
+      execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/frame5"}}
+    }
+
+    function 32 {
+      execute at @n[tag=tbs.base_found,sort=random] run function thebrokenscript:blocks/place/hello
+    }
+
+    function 33 {
+      execute at @n[tag=tbs.base_found,sort=random] run function thebrokenscript:blocks/place/empty
+    }
+
+    function 34 {
+      execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:100,texture:"thebrokenscript:item/screens/good_luck"}}
+      function thebrokenscript:night_lib/time_set {time:18000}
+      execute as @a at @s run playsound thebrokenscript:glithcsound1 neutral @s ~ ~ ~ 555.0 1.0 0.0
+    }
+
+    function 35 {
+      execute at @n[tag=tbs.base_found,sort=random] run function thebrokenscript:entity/null/invade_base_summon
+    }
+
+    function 36 {
+      execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+        gamerule doDaylightCycle true
+      } else run {
+        gamerule doDaylightCycle false
+      }
+    }
+
+    function 37 {
+      execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:180,texture:"thebrokenscript:item/screens/bsodd"}}
+      weather rain
+      execute as @a at @s run playsound thebrokenscript:bsod neutral @s ~ ~ ~ 555.0 1.0 0.0
+    }
+
+    function 38 {
+      execute at @n[tag=tbs.base_found,sort=random] run place template thebrokenscript:obfuscatedsign
+    }
+
+    function 39 {
+      execute at @n[tag=tbs.base_found,sort=random] run place template thebrokenscript:giift
+    }
+
+    function 40 {
+      tellraw @a [{"text":"OpenGL Error","color":"yellow"},{"text":": 1282 (Invalid operation)","color":"#FFFFFF"}]
+    }
+
+    function 41 {
+      # places unknown block.
+    }
+
+    function 42 {
+      # removes VHS, but instead ima add it
+      execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:600,texture:"thebrokenscript:item/screens/newscanlines"}}
+      
+    }
+
+    function 43 {
+      execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/onlinepngtools"}} 
+    }
+
+    function 44 {
+      execute as @a at @s positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"eyes",count:10,distx:5,disty:5,distz:5}
+    }
+
+    function 45 {
+      execute as @a at @s rotated as @s run {
+        rotate @s ~5 ~
+        playsound thebrokenscript:textmadness1 neutral @s ~ ~ ~ 555.0 1.0 0.0
+      }
+    }
+
+    function 46 {
+      execute as @a at @s run function thebrokenscript:open_door/scan_init
+    }
+
+    function 47 {
+      execute as @a at @s run playsound thebrokenscript:moonglitch neutral @s 555.0 1.0 0.0
+      effect give @a darkness 20 1 true
+    }
+
+    function 48 {
+      effect give @a unluck 50 1 false
+    }
+
+    function 49 {
+      advancement revoke @a only thebrokenscript:can_someone_hear_me
+      advancement grant @a only thebrokenscript:can_someone_hear_me
+
+    }
+
+    function 50 {
+      execute as @r at @s positioned ~40 ~ ~ positioned over motion_blocking_no_leaves run function thebrokenscript:entity/circuit/false_villager_summon
+    }
+
+    function 51 {
+      scoreboard players set enabled tbs.moon_event 1
+    }
+
+    function 52 {
+      execute at @n[tag=tbs.base_found,sort=random] positioned ~<%(Math.random()*20)-10%> ~<%(Math.random()*20)-10%> ~<%(Math.random()*20)-10%> run place template lavacast
+    }
+
+    function 53 {
+      execute store result score sign tbs.event_temp run random value 1..5
+      execute at @n[tag=tbs.base_found,sort=random] run {
+        REPEAT (1,5) as i {
+          execute if score sign tbs.event_temp matches <%i%> run place template thebrokenscript:sign<%i%>
+        }
+      }
+    }
+
+    function 54 {
+      fill ~-9 ~-9 ~-9 ~9 ~9 ~9 tinted_glass keep
     }
 }
 
@@ -549,6 +875,8 @@ dir overlay_lib {
         # armor.feet
         $execute if predicate thebrokenscript:overlay_lib/$(slot) run item replace entity @s armor.$(slot) with air
         $data remove storage tbs:temp overlay.players[{username:"$(username)"}].active[$(slot_num)]
+
+        scoreboard players set timer tbs.overlay_temp 10
     }
 
     function add_overlay {
@@ -604,7 +932,32 @@ dir overlay_lib {
     }
 }
 
+advancement got_killed {
+	"criteria": {
+		"a": {
+			"trigger": "minecraft:entity_killed_player",
+			"conditions": {
+				"entity": {
+					"nbt": "{Tags:[\"tbs.entity\"]}"
+				}
+			}
+		}
+	},
+	"requirements": [
+		[
+			"a"
+		]
+	],
+	"rewards": {
+		"function": "thebrokenscript:entity/got_killed"
+	}
+}
+
 dir entity {
+    function got_killed {
+      advancement revoke @s only thebrokenscript:got_killed
+      execute on attacker if entity @s[tag=tbs.entity] run tag @s add tbs.entity.killed_player
+    }
     function player {
         execute as @e[tag=aj.tbs_player.root] at @s rotated as @s run block {
             execute on passengers if entity @s[tag=aj.tbs_player.data] run data modify storage tbs:temp player.head set from entity @s data.locators.head.uuid
@@ -613,6 +966,9 @@ dir entity {
                 block fill_player_head { with storage tbs:temp player
 
                     $data modify entity $(head) item.components."minecraft:item_model" set value "thebrokenscript:heads/$(variant)"
+                    data modify storage tbs:temp notexture set value "notexture"
+                    $execute store result score notexture tbs.entity_temp run data modify storage tbs:temp notexture set value "$(variant)"
+                    $execute if score notexture tbs.entity_temp matches 0 run data modify entity $(head) item_display set value "head"
                 }
             }
             block rotate_body { with storage tbs:temp player
@@ -621,7 +977,7 @@ dir entity {
                     data modify storage tbs:temp entity_rotation.threshold set value 30
                     execute store result score result tbs.entity_temp run function thebrokenscript:rotation_treshold with storage tbs:temp entity_rotation
                     # $execute unless score result tbs.entity_temp matches 1 rotated as $(head) run rotate @s ~ 0
-                    $execute unless score result tbs.entity_temp matches 1 at @s rotated as $(head) positioned ^ ^ ^5 rotated as @s positioned ^ ^ ^40 facing entity @s eyes facing ^ ^ ^-1 positioned as @s run rotate @s ~ 0
+                    $execute unless score result tbs.entity_temp matches 1 at @s rotated as $(head) positioned ^ ^ ^5 rotated as @s positioned ^ ^ ^15 facing entity @s eyes facing ^ ^ ^-1 positioned as @s run rotate @s ~ 0
             }
             # item.components."minecraft:custom_model_data".strings[0]
         }
@@ -638,11 +994,163 @@ dir entity {
             execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
             execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"null_scare_spawn",tick:"null_scare_tick",name:"null_scare"}}
         }
+
         function endgame_summon {
+          execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
+          execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"null_endgame_spawn",tick:"null_endgame_tick",name:"null_endgame"}}
 
         }
 
+        function invade_base_summon {
+          execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
+          execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"null_invade_base_spawn",tick:"null_invade_base_tick",name:"null_invade_base"}}
+        }
+
+        function nulll_summon {
+          execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
+          tag @n[tag=aj.tbs_player.root,tag=!tbs.root.nulll] add tbs.root.nulll
+          summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.9}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+          execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"nulll_spawn",tick:"nulll_tick",kill:"nulll_kill",name:"nulll"}}
+          tag @n[tag=tbs.new_entity] remove tbs.new_entity
+        }
+
+        function null_is_here_summon {
+          execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
+          execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"null_is_here_spawn",tick:"null_is_here_tick",name:"null_is_here"}}
+        }
+
+        function null_watching_summon {
+          execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
+          execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"null_watching_spawn",tick:"null_watching_tick",name:"null_watching"}}
+        }
+
+        function null_flying_summon {
+          execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
+          execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"null_flying_spawn",tick:"null_flying_tick",name:"null_flying"}}
+        }
+
     }
+
+    dir circuit {
+      
+      function false_villager_summon {
+        summon villager ~ ~ ~ {Tags:["tbs.testificate"],CustomName:'"TESTIFICATE"',CustomNameVisible:1b,attributes:[{id:"max_health",base:1000}],Health:1000}
+        execute as @n[tag=!tbs.entity,tag=tbs.testificate] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"false_villager_spawn",tick:"false_villager_tick",name:"false_villager"}}
+        # /data remove entity 46a39dab-a6f7-4e59-b7b0-9ab4f76cfa0e Brain.memories."minecraft:potential_job_site"
+      }
+
+      function circuit_disguised_as_creeper_summon {
+        summon item_display ~ ~ ~ {Tags:["tbs.fake_creeper"],transformation:{translation: [0.0f, 0.5f, 0.0f], right_rotation: [0.0f, 0.0f, 0.0f, 1.0f], scale: [1.0f, 1.0f, 1.0f], left_rotation: [0.0f, 0.0f, 0.0f, 1.0f]},item:{id:"minecraft:stick",count:1,components:{"minecraft:item_model":"thebrokenscript:creeper"}}}
+        execute store result entity @n[tag=tbs.fake_creeper,tag=!tbs.entity] Rotation[0] int 1 run random value -180..179
+        scoreboard players set @n[tag=tbs.fake_creeper,tag=!tbs.entity] tbs.despawn_timer 1000
+        execute as @n[tag=!tbs.entity,tag=tbs.fake_creeper] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"circuit_disguised_as_creeper_spawn",tick:"circuit_disguised_as_creeper_tick",name:"circuit_disguised_as_creeper"}}
+      }
+
+      function circuit_stalk_summon {
+          execute rotated ~ 0 run function animated_java:circuit/summon {args:{animation:'crouchidle',start_animation:true}}
+          tag @n[tag=aj.circuit.root,tag=!tbs.root.circuit_stalk] add tbs.root.circuit_stalk
+          summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.6}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+          execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"circuit_stalk_spawn",tick:"circuit_stalk_tick",name:"circuit_stalk"}}
+          tag @n[tag=tbs.new_entity] remove tbs.new_entity
+          kill @n[tag=tbs.circuit_spawn]
+          summon marker ~ ~ ~ {Tags:["tbs.circuit_spawn"]}
+
+      }
+
+      function circuit_mineshaft_flee_summon {
+        execute rotated ~ 0 run function animated_java:circuit/summon {args:{animation:'crouchidle',start_animation:true}}
+        tag @n[tag=aj.circuit.root,tag=!tbs.root.circuit_mineshaft_flee] add tbs.root.circuit_mineshaft_flee
+        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.6}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+        execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"circuit_mineshaft_flee_spawn",tick:"circuit_mineshaft_flee_tick",name:"circuit_mineshaft_flee"}}
+        tag @n[tag=tbs.new_entity] remove tbs.new_entity
+      }
+
+      function circuit_mineshaft_walk_summon {
+        execute rotated ~ 0 run function animated_java:circuit/summon {args:{animation:'crouchidle',start_animation:true}}
+        tag @n[tag=aj.circuit.root,tag=!tbs.root.circuit_stalk] add tbs.root.circuit_stalk
+        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.6}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+        execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"circuit_mineshaft_stare_spawn",tick:"circuit_stalk_tick",name:"circuit_stalk"}}
+        tag @n[tag=tbs.new_entity] remove tbs.new_entity
+      }
+
+      function circuit_summon {
+        execute rotated ~ 0 run function animated_java:circuit/summon {args:{animation:'idle',start_animation:true}}
+        tag @n[tag=aj.circuit.root,tag=!tbs.root.circuit] add tbs.root.circuit
+        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:1.0}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+        execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"circuit_spawn",tick:"circuit_tick",kill:"circuit_kill",name:"circuit"}}
+        tag @n[tag=tbs.new_entity] remove tbs.new_entity
+      }
+
+    }
+
+    function faraway_summon {
+      execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'faraway'}}
+      execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"faraway_spawn",tick:"faraway_tick",name:"faraway"}}
+    }
+
+    function deceiver_summon {
+      execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'null'}}
+      
+      execute store result score mainhand tbs.entity_temp run random value 1..4
+      REPEAT ({1:"minecraft:iron_sword",2:"stone_sword",3:"stone_pickaxe",4:"stone_axe"}) as i,item {
+        execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] on passengers if entity @s[tag=aj.tbs_player.item_display.mainhand] if score mainhand tbs.entity_temp matches <%i%> run data modify entity @s item set value {id:"<%item%>",count:1}
+      }
+
+      execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"deceiver_spawn",tick:"deceiver_tick",name:"deceiver"}}
+    }
+
+    function curved_summon {
+      execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'angry_curved_idle',start_animation:true,variant:'curved'}}
+      execute as @n[tag=!tbs.entity,tag=aj.tbs_player.root] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"curved_spawn",tick:"curved_tick",name:"curved"}}
+    }
+
+    function notexture_summon {
+      execute rotated ~ 0 run function animated_java:tbs_player/summon {args:{animation:'idle',start_animation:true,variant:'notexture'}}
+      tag @n[tag=aj.tbs_player.root,tag=!tbs.root.notexture] add tbs.root.notexture
+      summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.7}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+      execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"notexture_spawn",tick:"notexture_tick",name:"notexture"}}
+      tag @n[tag=tbs.new_entity] remove tbs.new_entity
+    }
+
+    dir thebrokenend {
+      function stalk_summon {
+        execute rotated ~ 0 run function animated_java:thebrokenend/summon {args:{animation:'idle1',start_animation:true}}
+        tag @n[tag=aj.thebrokenend.root,tag=!tbs.root.thebrokenend_stalk] add tbs.root.thebrokenend_stalk
+        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.7}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+        execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"thebrokenend_stalk_spawn",tick:"thebrokenend_stalk_tick",name:"thebrokenend_stalk"}}
+        tag @n[tag=tbs.new_entity] remove tbs.new_entity
+      }
+
+      function summon {
+        execute rotated ~ 0 run function animated_java:thebrokenend/summon {args:{animation:'idle1',start_animation:true}}
+        tag @n[tag=aj.thebrokenend.root,tag=!tbs.root.thebrokenend] add tbs.root.thebrokenend
+        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.7}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+        execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"thebrokenend_spawn",tick:"thebrokenend_tick",kill:"thebrokenend_kill",name:"thebrokenend"}}
+        tag @n[tag=tbs.new_entity] remove tbs.new_entity
+      }
+
+    }
+
+    dir siluet {
+      function stare_summon {
+        execute rotated ~ 0 run function animated_java:siluet/summon {args:{animation:'idle',start_animation:true}}
+        tag @n[tag=aj.siluet.root,tag=!tbs.root.siluet_stare] add tbs.root.siluet_stare
+        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.3}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+        execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"siluet_stare_spawn",tick:"siluet_stare_tick",name:"siluet_stare"}}
+        tag @n[tag=tbs.new_entity] remove tbs.new_entity
+      }
+
+      function summon {
+        execute rotated ~ 0 run function animated_java:siluet/summon {args:{animation:'idle',start_animation:true}}
+        tag @n[tag=aj.siluet.root,tag=!tbs.root.siluet] add tbs.root.siluet
+        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.9}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+        execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"siluet_spawn",tick:"siluet_tick",name:"siluet"}}
+        tag @n[tag=tbs.new_entity] remove tbs.new_entity
+      }
+
+    }
+
+
 
     function set_procedures {
         # args:
@@ -668,7 +1176,7 @@ dir entity {
         block { with storage tbs:temp entity.set_procedures
             $tag @s add tbs.$(name)
             $data modify storage tbs:entity entities append value {entity:"$(uuid)"}
-            $data modify storage tbs:entity entities.[{entity:"$(uuid)"}] set value {entity:"$(uuid)",tick:"$(tick)",spawn:"$(spawn)",kill:"$(kill)"}
+            $data modify storage tbs:entity entities.[{entity:"$(uuid)"}] set value {entity:"$(uuid)",tick:"$(tick)",spawn:"$(spawn)",kill:"$(kill)",name:"$(name)"}
         }
     }
 
@@ -682,7 +1190,7 @@ dir entity {
                 execute as @a[distance=0..10] run function thebrokenscript:damage_macro {name:'Null',damage:5}
                 } else run {
                     function thebrokenscript:entity/null/endgame_summon
-                    say endgame
+                    function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
                 }
         }
 
@@ -692,28 +1200,751 @@ dir entity {
                 function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
 
         }
+
+        function null_invade_base_spawn {
+          execute if entity @p[distance=0..40] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+             execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+               tellraw @a "[{}]"
+             } else run {
+               tellraw @a "{[> null]}"
+             }
+            }
+          }
+          scoreboard players set @s tbs.despawn_timer 5000
+
+        }
+
+        function null_invade_base_tick {
+
+          execute if entity @p[distance=0..15] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+              summon lightning_bolt
+              execute as @a[distance=0..30] at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/wecanhearyou"}}
+              playsound thebrokenscript:textmadness1 neutral @a ~ ~ ~ 555.0 1.0 0.0
+              function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+            } else run {
+              function thebrokenscript:entity/null/nulll_summon
+              function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+            }
+          }
+          function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
+        }
+
+        function nulll_spawn {
+          playsound thebrokenscript:nulljumpscareloud neutral @a ~ ~ ~ 555.0 1.0 0.0
+          playsound thebrokenscript:nullchase neutral @a ~ ~ ~ 555.0 1.0 0.0
+          scoreboard players set @s tbs.despawn_timer 450
+
+        }
+
+        function nulll_remove {
+          stopsound @a
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+            function thebrokenscript:entity/null/null_is_here_summon
+          }
+          function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+        }
+
+        function nulll_tick {
+          function thebrokenscript:entity/apply_animation {move:'walk',idle:'idle',root:'tbs_player'}
+          function thebrokenscript:entity/set_target {target:'@p'}
+          execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:'null',count:1,distx:2,disty:2,distz:2}
+          execute as @n[tag=tbs.root.nulll] at @s run function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
+          execute unless entity @p[distance=0..400] run function thebrokenscript:entity/remove {command:"execute as @n[tag=tbs.root.nulll] run function animated_java:tbs_player/remove/this"}
+          execute as @a[distance=0..200] run function thebrokenscript:damage_macro {name:'Null',damage:0.2}
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:night_lib/time_set {time:18000}
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:night_lib/time_set {time:0}
+
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.1} run {
+            execute as @r[distance=0..200] run tag @s add tbs.entity.null_teleport
+            execute store result storage tbs:temp entity.nulll.teleport.x int 1 run random value -3..3
+            execute store result storage tbs:temp entity.nulll.teleport.z int 1 run random value -3..3
+            execute at @p[tag=tbs.entity.null_teleport] run { with storage tbs:temp entity.nulll.teleport
+              tag @n[tag=tbs.root.nulll] add tbs.not_teleported
+              $execute positioned ~$(x) ~ ~$(z) run tp @s ~ ~ ~
+              execute at @s run tp @n[tag=tbs.not_teleported] ~ ~ ~ ~ 0
+              tag @p remove tbs.entity.null_teleport
+              execute at @s run tag @n[tag=tbs.not_teleported] remove tbs.not_teleported
+            }
+
+          }
+          fill ~-1 ~ ~-1 ~1 ~2 ~1 air replace #thebrokenscript:nullbreakablefixed
+
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+            REPEAT (1,3) as i {
+              execute store result storage tbs:temp entity.nulll.break.<%i%> int 1 run random value -2..2
+            }
+            block { with storage tbs:temp entity.nulll.break
+              $setblock ~$(x) ~$(y) ~$(z) air
+
+            }
+          }
+        }
+
+        function nulll_kill {
+          stopsound @a
+          playsound thebrokenscript:nullkillsplayer neutral @a 555.0 1.0 0.0
+          kick @p null
+          execute unless entity @p[distance=0..40] run function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+        }
+
+        function nulll_despawn {
+          execute as @n[tag=tbs.root.nulll] run function animated_java:tbs_player/remove/this
+          function thebrokenscript:entity/remove {command:"execute if entity @s"}
+          tp @s ~ ~-1000 ~
+          kill @s
+        }
+
+        function null_endgame_spawn {
+          playsound thebrokenscript:theendisnear neutral @a ~ ~ ~ 555.0 1.0 0.0
+          tellraw @a {"text":"HERE I AM","color":"dark_red"}
+          tellraw @a {"text":"VOIDNULLSILUETTANOMALY","color":"dark_red","obfuscated":true}
+          scoreboard players set @s tbs.despawn_timer 20
+          execute as @a[distance=0..10] run function thebrokenscript:damage_macro {name:"Null",damage:"100"}
+        }
+
+        function null_endgame_tick {
+          tellraw @a {"text":"HERE I AM","color":"dark_red"}
+          tellraw @a {"text":"VOIDNULLSILUETTANOMALY","color":"dark_red","obfuscated":true}
+          execute as @a[distance=0..20] run function thebrokenscript:damage_macro {name:"Null",damage:"1"}
+          execute as @a[distance=0..2] run function thebrokenscript:damage_macro {name:"Null",damage:"20"}
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.05} as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:"5",texture:"thebrokenscript:item/screens/endgame"}}
+        }
+
+        function null_is_here_spawn {
+          scoreboard players set @s tbs.despawn_timer 500
+        }
+
+        function null_is_here_tick {
+          function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
+          execute store result score random_null tbs.entity_temp run random value 1..14
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+            title @a times 10 70 20
+            REPEAT ({1:'You know nothing',2:'Worship me',3:'Follow me',4:'Corrupted',5:'Go away',6:'Null',7:'We can hear you',8:'Can you see me?',9:'0',10:'Behind you',11:'Help me',12:'Nothing can be changed',13:'Close your eyes',14:'One of us'}) as i,title {
+              execute if score random_null tbs.entity_temp matches <%i%> run title @a title "<%title%>"
+            }
+          }
+          playsound thebrokenscript:nullishereloop neutral @a ~ ~ ~ 555.0 1.0 0.0
+          scoreboard players add @s tbs.particle_decay 1
+          execute if score @s tbs.particle_decay matches 15.. rotated as @s run {
+            execute store result storage tbs:temp entity.null_is_here.x int 1 run random value -2..2
+            execute store result storage tbs:temp entity.null_is_here.y int 1 run random value -2..2
+            execute store result storage tbs:temp entity.null_is_here.z int 1 run random value -2..2
+            block { with storage tbs:temp entity.null_is_here
+              $execute at @p positioned ~$(x) ~$(y) ~$(z) run tp @s ~ ~ ~ ~ 0
+            }
+            scoreboard players set @s tbs.particle_decay 0
+          }
+          execute as @a[distance=0..0.6] run function thebrokenscript:damage_macro {name:"Null",damage:"200"}
+
+          execute unless entity @p[distance=0..50] run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/null_is_here_despawn"}
+        }
+
+        function null_is_here_kill {
+          scoreboard players set @a tbs.fake_ban 0
+          function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+
+        }
+
+        function null_watching_spawn {
+          playsound minecraft:ambient.cave neutral @a ~ ~ ~ 555.0 1.0 0.0
+        }
+
+        function null_watching_tick {
+          function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
+          execute as @e[type=iron_golem,distance=0..10] run function thebrokenscript:damage_macro {name:'Null',damage:55}
+
+          execute if entity @p[distance=0..10] run {
+            execute store result score null_watching tbs.entity_temp run random value 1..10
+
+            execute if score null_watching tbs.entity_temp matches 1 run {
+              playsound thebrokenscript:nullflee neutral @a ~ ~ ~ 555.0 1.0 0.0
+              effect give @a[distance=0..24] blindness 4 1
+            }
+
+            execute if score null_watching tbs.entity_temp matches 2..3 run {
+              effect give @a[distance=0..24] darkness 4 1
+              function thebrokenscript:entity/null/nulll_summon
+            }
+
+            execute if score null_watching tbs.entity_temp matches 4 run {
+              execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"null",count:10,distx:2,disty:2,distz:2}
+            }
+
+            execute if score null_watching tbs.entity_temp matches 5 run {
+              execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"eyes",count:10,distx:2,disty:2,distz:2}
+            }
+
+            execute if score null_watching tbs.entity_temp matches 6 run {
+              execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"null",count:10,distx:2,disty:2,distz:2}
+              execute as @a[distance=0..40] at @s run function thebrokenscript:null_torture/teleport
+            }
+
+            execute if score null_watching tbs.entity_temp matches 7 run {
+              execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"null",count:10,distx:2,disty:2,distz:2}
+              execute as @a[distance=0..40] at @s run function thebrokenscript:day_b/teleport
+            }
+
+            execute if score null_watching tbs.entity_temp matches 8..9 run {
+              execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"null",count:10,distx:2,disty:2,distz:2}
+              tp @p @n[tag=tbs.base_found,sort=random]
+            }
+
+            execute if score null_watching tbs.entity_temp matches 10 run {
+              summon lightning_bolt
+            }
+
+            function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"} 
+
+          }
+        }
+
+        function null_flying_spawn {
+          playsound thebrokenscript:nullsad neutral @a ~ ~ ~ 555.0 1.0 0.0
+        }
+
+        function null_flying_tick {
+          execute unless entity @p[distance=0..350] run function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+          function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
+          execute if entity @p[distance=0..40] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+              function thebrokenscript:entity/null/null_is_here_summon
+              function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+            } else run {
+              function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+            }
+          }
+        }
+
+        function faraway_spawn {
+          scoreboard players set @s tbs.despawn_timer 1000
+        }
+
+        function faraway_tick {
+          function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
+          execute if entity @p[distance=0..30] run {
+            playsound thebrokenscript:nullkillsplayer neutral @a ~ ~ ~ 555.0 1.0 0.0
+            execute as @a[distance=0..30] at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:15,texture:"thebrokenscript:item/screens/wecanhearyou"}}
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+              execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"eyes",count:20,distx:3,disty:3,distz:3}
+            } else run {
+              execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:"null",count:20,distx:3,disty:3,distz:3}
+            }
+            function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+          }
+        }
+
+        function false_villager_spawn {
+          execute store result score count tbs.entity_temp if entity @e[tag=tbs.testificate,distance=0..500]
+          execute if score count tbs.entity_temp matches 3.. run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/false_villager_despawn"}
+          scoreboard players set @s tbs.despawn_timer 18000
+        }
+
+        function false_villager_despawn {
+          tp @s ~ ~-1000 ~
+          kill @s
+        }
+
+        function false_villager_tick {
+          execute if entity @p[distance=0..20] if predicate {"condition":"minecraft:random_chance","chance":0.0003} run return run {
+            function thebrokenscript:entity/circuit/circuit_summon
+            function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/false_villager_despawn"}
+          }
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.0003} run return run {
+            function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/false_villager_despawn"}
+          }
+          execute store result score health tbs.entity_temp run data get entity @s Health
+          execute if score health tbs.entity_temp matches ..979 run {
+            function thebrokenscript:entity/circuit/circuit_summon
+            stopsound @a[distance=0..16] * minecraft:entity.villager.hurt
+            playsound minecraft:entity.villager.death neutral @a[distance=0..16] ~ ~ ~ 1.0 1.0 0.0
+            function thebrokenscript:entity/remove {command:"kill"}
+          }
+          data remove entity @s Brain.memories."minecraft:potential_job_site"
+        }
+
+        function deceiver_spawn {
+          tellraw @a ["",{"selector":"@r","color":"yellow"},{"text":" joined the game","color":"yellow"}]
+        }
+
+        function deceiver_tick {
+          function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
+          execute if entity @p[distance=0..10] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+              function thebrokenscript:entity/circuit/circuit_summon
+            }
+            function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+          }
+          execute unless entity @p[distance=0..30] run function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+        }
+
+
+        function circuit_disguised_as_creeper_spawn {
+          execute store result score y tbs.entity_temp run data get entity @s Pos[1]
+          execute if score y tbs.entity_temp matches 31.. run return run function thebrokenscript:entity/remove {command:"kill"}
+
+          scoreboard players set @s tbs.despawn_timer 1000
+        }
+
+        function circuit_disguised_as_creeper_tick {
+          execute if entity @p[distance=0..40] run {
+            function thebrokenscript:entity/circuit/circuit_summon
+            function thebrokenscript:entity/remove {command:"kill"}
+          }
+        }
+
+        function circuit_stalk_spawn {
+          execute unless entity @p[distance=0..40] run return run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+          execute store result score y tbs.entity_temp run data get entity @s Pos[1]
+          execute if score y tbs.entity_temp matches 31.. run return run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+          REPEAT (['_clan_void','_other','']) as i {
+            execute if biome ~ ~ ~ thebrokenscript:null_biome<%i%> run return run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+          }
+          execute if entity @p[distance=0..40] run {
+            scoreboard players set @s tbs.despawn_timer 18000
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run {
+              execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+                playsound thebrokenscript:falsecalm2 neutral @a ~ ~ ~ 555.0 1.0 0.0
+              } else run {
+                playsound thebrokenscript:integritywatching neutral @a ~ ~ ~ 555.0 1.0 0.0
+              }
+            }
+          }
+
+        }
+
+        function circuit_stalk_despawn {
+          execute as @n[tag=tbs.root.circuit_stalk] run function animated_java:circuit/remove/this
+          tp @s ~ ~-1000 ~
+          kill @s
+        }
+
+        function circuit_stalk_tick {
+          function thebrokenscript:entity/set_target {target:"@p"}
+          function thebrokenscript:entity/apply_animation {move:'crouchwalk',idle:'crouchidle',root:'circuit'}
+          execute if entity @p[distance=0..10] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+              #effect give @a blindness 25 1 false
+              playsound ambient.cave neutral @a ~ ~ ~ 555.0 1.0 0.0
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+            } else execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+              function thebrokenscript:entity/circuit/circuit_summon
+              effect give @a slowness 3 0 true
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+            } else run {
+              #function thebrokenscript:entity/curved_summon
+              effect give @a slowness 3 0 true
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+            }
+          }
+          execute as @a[distance=0..40] if predicate thebrokenscript:looking_at_circuit as @n[tag=tbs.circuit_stalk] run {
+            function thebrokenscript:entity/circuit/circuit_mineshaft_flee_summon
+            function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+          }
+        }
+
+        function circuit_mineshaft_flee_spawn {
+          scoreboard players set @s tbs.despawn_timer 300
+        }
+
+        function circuit_mineshaft_flee_despawn {
+          function thebrokenscript:entity/circuit/circuit_mineshaft_walk_summon
+          execute as @n[tag=tbs.root.circuit_stalk] run function animated_java:circuit/remove/this
+          tp @s ~ ~-1000 ~
+          kill @s
+
+        }
+
+        function circuit_mineshaft_flee_tick {
+          function thebrokenscript:entity/set_target {target:"@n[tag=tbs.circuit_spawn]"}
+          function thebrokenscript:entity/apply_animation {move:'crouchwalk',idle:'crouchidle',root:'circuit'}
+
+        }
+
+        function circuit_mineshaft_stare_spawn {
+          REPEAT (['the_end','end_midlands','end_highlands','thebrokenscript:null_biome','thebrokenscript:null_biome_other','thebrokenscript:null_biome_clan_void']) as biome {
+            execute if biome ~ ~ ~ <%biome%> run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+          }
+          execute store result score y tbs.entity_temp run data get entity @s Pos[1]
+          execute if score y tbs.entity_temp matches 31.. run return run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+          execute unless entity @p[distance=0..40] run return run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn"}
+          scoreboard players set @s tbs.despawn_timer 10000
+        }
+
+        function curved_spawn {
+          playsound thebrokenscript:youknownothing neutral @a ~ ~ ~ 555.0 1.0 0.0
+          fill ~-2 ~-1 ~-2 ~2 ~3 ~2 air replace #thebrokenscript:circuitbreakable
+          scoreboard players set @s tbs.despawn_timer 1200
+          summon interaction ~ ~ ~ {Tags:["tbs.curved_int"],width:1,height:2}
+          ride @n[tag=tbs.curved_int] mount @s
+        }
+
+        function curved_tick {
+          playsound thebrokenscript:curved_spawn neutral @a ~ ~ ~ 555.0 1.0 0.0
+          fill ~-2 ~-1 ~-2 ~2 ~3 ~2 air replace #thebrokenscript:circuitbreakable
+          function thebrokenscript:particles/spawn {name:"curved",count:1,distx:7,disty:7,distz:7}
+
+          execute on passengers if entity @s[type=interaction] if data entity @s attack run {
+            playsound minecraft:entity.player.attack.strong player @a[distance=0..16] ~ ~ ~ 1.0 1.0 0.0
+            
+            execute on vehicle run {
+              scoreboard players add @s tbs.particle_decay 1
+              execute if score @s tbs.particle_decay matches 10.. on passengers if entity @s[type=interaction] on attacker run tellraw @a ["",{"text":"DyeXD412 was slain by "},{"selector":"@s"}]
+              execute if score @s tbs.particle_decay matches 10.. run schedule 100t {
+                tellraw @a {"text":"DyeXD412 left the game","color":"yellow"} 
+              }
+              execute if score @s tbs.particle_decay matches 10.. run {
+                function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+                loot spawn ~ ~ ~ loot thebrokenscript:curved
+              }
+            }
+            data remove entity @s attack
+          }
+          
+        }
+
+        function circuit_spawn {
+          playsound thebrokenscript:circuit_jumpscare neutral @a ~ ~ ~ 555.0 1.0 0.0
+          playsound thebrokenscript:nulljumpscareloud neutral @a ~ ~ ~ 555.0 1.0 0.0
+          playsound thebrokenscript:nullchase neutral @a ~ ~ ~ 1.0 1.0 0.0
+          scoreboard players set @s tbs.despawn_timer 400
+          execute positioned ~ ~3 ~ run function thebrokenscript:particles/spawn {name:"eyes",count:10,distx:5,disty:3,distz:5}
+        }
+
+        function circuit_tick {
+          function thebrokenscript:entity/set_target {target:"@p"}
+          function thebrokenscript:entity/apply_animation {move:'idle2',idle:'chase2',root:'circuit'}
+          scoreboard players add a tbs.entity_temp 1
+          fill ~-2 ~ ~-2 ~2 ~5 ~2 air replace #thebrokenscript:circuitbreakable
+
+          execute if score a tbs.entity_temp matches 45.. run {
+            scoreboard players set a tbs.entity_temp 0
+            playsound thebrokenscript:nulljumpscareloud neutral @a ~ ~ ~ 555.0 0.5 0.0
+          }
+          # execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/screenshot_2025-01-01_145155"}}
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.2} run {
+            execute as @a positioned ~ ~5 ~ run rotate @s facing ~ ~ ~
+          }
+
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.02} run {
+            execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/blick"}}
+          }
+
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.02} run {
+            function thebrokenscript:night_lib/time_set {time:0}
+            execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/frame2"}}
+          }
+
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.2} run {
+            function thebrokenscript:night_lib/time_set {time:0}
+          }
+
+          fill ~-2 ~-2 ~-2 ~2 ~2 ~2 cobblestone replace #thebrokenscript:wa
+
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run {
+            execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/textvhs1"}}
+          }
+
+          execute as @a[distance=0..4] run function damage_macro {name:'Circuit',damage:'50'}
+
+        }
+
+        function circuit_kill {
+          stopsound @a
+          playsound thebrokenscript:nulljumpscareloud neutral @a 555.0 1.0 0.0
+          
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+            kick @a No more running
+          } else run {
+            kick @a No more hiding
+          }
+
+          function thebrokenscript:entity/entity_procedures/circuit_despawn
+        }
+
+        function circuit_despawn {
+
+          execute as @n[tag=tbs.root.circuit] run function animated_java:circuit/remove/this
+          tp @s ~ ~-1000 ~
+          kill @s
+
+        }
+
+        function notexture_spawn {
+          execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/keepplaying"}}
+        }
+
+        function notexture_despawn {
+          execute as @n[tag=tbs.root.notexture] run function animated_java:tbs_player/remove/this
+          tp @s ~ ~-1000 ~
+          kill @s
+
+        }
+
+        function notexture_tick {
+          function thebrokenscript:entity/set_target {target:"@p"}
+          function thebrokenscript:entity/apply_animation {move:'walk',idle:'idle',root:'tbs_player'}
+          scoreboard players add @s tbs.particle_decay 1
+          execute if score @s tbs.particle_decay matches 20.. run {
+            scoreboard players set @s tbs.particle_decay 0
+            REPEAT (1,3) {
+              execute store result storage tbs:temp notex.x int 1 run random value -2..2
+              execute store result storage tbs:temp notex.y int 1 run random value 0..4
+              execute store result storage tbs:temp notex.z int 1 run random value -2..2
+              block { with storage tbs:temp notex
+                $execute positioned ~$(x) ~$(y) ~$(z) run function thebrokenscript:blocks/place/disruption
+              }
+            }
+          }
+          execute if entity @p[distance=0..20] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+              function thebrokenscript:particles/spawn {name:"null",count:10,distx:3,disty:3,distz:3}
+              playsound thebrokenscript:textmadness1 neutral @a ~ ~ ~ 555.0 1.0 0.0
+              effect give @a blindness 3 1 true
+              execute as @a[distance=0..40] at @s run function thebrokenscript:day_b/teleport
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/notexture_despawn"}
+            } else run {
+              function thebrokenscript:particles/spawn {name:"null",count:10,distx:3,disty:3,distz:3}
+              give @a[distance=0..40] minecraft:knowledge_book[minecraft:custom_name='{"text":"N","italic":false}',minecraft:item_model="thebrokenscript:n",max_stack_size=64] 12
+              execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run function thebrokenscript:blocks/place/disruption
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/notexture_despawn"}
+            }
+          }
+          # minecraft:knowledge_book[minecraft:custom_name='{"text":"N","italic":false}',minecraft:item_model="thebrokenscript:n"]
+        }
+
+        function thebrokenend_stalk_spawn {
+          weather rain
+          scoreboard players set @s tbs.despawn_timer 18000
+        }
+
+        function thebrokenend_stalk_despawn {
+          execute as @n[tag=tbs.root.thebrokenend_stalk] run function animated_java:thebrokenend/remove/this
+          tp @s ~ ~-1000 ~
+          kill @s
+        }
+
+        function thebrokenend_stalk_tick {
+          attribute @s movement_speed base set 0.0
+          rotate @s facing entity @p eyes
+          execute as @a[distance=0..150] if predicate thebrokenscript:looking_at_tbe as @n[tag=tbs.thebrokenend_stalk] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run {
+              stopsound @a
+              summon marker ~ ~ ~ {Tags:["tbs.entity.tbe_summon"]}
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/thebrokenend_stalk_despawn"}
+              schedule 500t {
+                execute at @n[tag=tbs.entity.tbe_summon] run function thebrokenscript:entity/thebrokenend/summon
+                kill @n[tag=tbs.entity.tbe_summon]
+              }
+
+            } else run {
+              function thebrokenscript:blocks/place/physicalstacktrace
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/thebrokenend_stalk_despawn"}
+            }
+          }
+        }
+
+        function thebrokenend_spawn {
+          playsound thebrokenscript:theendisnear neutral @a ~ ~ ~ 555.0 1.0 0.0
+          function thebrokenscript:night_lib/time_set {time:18000}
+          scoreboard players set @s tbs.despawn_timer 1000
+        }
+
+        function thebrokenend_despawn {
+          execute as @n[tag=tbs.root.thebrokenend] run function animated_java:thebrokenend/remove/this
+          tp @s ~ ~-1000 ~
+          kill @s
+        }
+
+        function thebrokenend_tick {
+          function thebrokenscript:entity/set_target {target:"@p"}
+          function thebrokenscript:entity/apply_animation {move:'run',idle:'idle1',root:'thebrokenend'}
+          execute as @n[tag=aj.thebrokenend.root] run function animated_java:thebrokenend/variants/angry/apply
+          fill ~-3 ~ ~-3 ~3 ~15 ~3 air replace #thebrokenscript:circuitbreakable
+          playsound thebrokenscript:theendisnear neutral @a ~ ~ ~ 555.0 1.0 0.0
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.008} as @a positioned ~ ~18 ~ run rotate @s facing ~ ~ ~
+
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.04} run {
+            function thebrokenscript:night_lib/time_set {time:18000}
+            execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/blick"}}
+          }
+
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.07} run {
+            function thebrokenscript:night_lib/time_set {time:0}
+            execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/frame2"}}
+          }
+          # wecanhearyou
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.02} run {
+            function thebrokenscript:night_lib/time_set {time:0}
+            execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/wecanhearyou"}}
+          }
+
+          execute as @e[type=iron_golem,distance=0..30] run function damage_macro {name:"The Broken End",damage:30}
+          execute as @e[type=#minecraft:boat,distance=0..30] run function damage_macro {name:"The Broken End",damage:30}
+          # dotscreenframe1
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.04} run {
+            execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/dotscreenframe1"}}
+          }
+          effect give @a[distance=0..40] slowness 1 0 true
+          effect give @a[distance=0..40] slow_falling 1 0 true
+
+          fill ~-2 ~-2 ~-2 ~2 ~2 ~2 cobblestone replace #thebrokenscript:wa
+          execute as @a[distance=0..3] run function damage_macro {name:"The Broken End",damage:30}
+        }
+
+        function thebrokenend_kill {
+          stopsound @a
+          playsound thebrokenscript:nullkillsplayer neutral @a 555.0 1.0 0.0
+          kick @a err.endisnear
+          function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/thebrokenend_despawn"}
+        }
+
+
+        function siluet_stare_spawn {
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.7} run return run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/siluet_stare_despawn"}
+          playsound ambient.cave neutral @a 555.0 1.0 0.0
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.9} run advancement grant @a only thebrokenscript:can_you_see_me
+          scoreboard players set @s tbs.particle_decay 1
+          scoreboard players set @s tbs.despawn_timer 18000
+        }
+
+        function siluet_stare_despawn {
+          execute if score @s tbs.particle_decay matches 1 run function thebrokenscript:entity/siluet/summon
+          execute as @n[tag=tbs.root.siluet_stare] run function animated_java:siluet/remove/this
+          tp @s ~ ~-1000 ~
+          kill @s
+        }
+
+        function siluet_stare_tick {
+          function thebrokenscript:entity/set_target {target:"@p"}
+          execute as @a[distance=0..100] if predicate thebrokenscript:looking_at_siluet as @n[tag=tbs.siluet_stare] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+              summon lightning_bolt ~5 ~ ~
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/siluet_stare_despawn"}
+            } else run {
+              scoreboard players set @s tbs.particle_decay 0
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/siluet_stare_despawn"}
+              execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/cantyousee"}}
+            }
+          }
+
+          execute if entity @p[distance=0..20] if predicate thebrokenscript:looking_at_siluet as @n[tag=tbs.siluet_stare] run {
+            execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
+              summon lightning_bolt ~5 ~ ~
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/siluet_stare_despawn"}
+            } else run {
+              scoreboard players set @s tbs.particle_decay 0
+              function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/siluet_stare_despawn"}
+              execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/cantyousee"}}
+            }
+          }
+        }
+
+        function siluet_spawn {
+          playsound thebrokenscript:nullchase neutral @a ~ ~ ~ 555.0 1.0 0.0
+          scoreboard players set @s tbs.despawn_timer 800
+        }
+
+        function siluet_despawn {
+          execute as @n[tag=tbs.root.siluet] run function animated_java:siluet/remove/this
+          tp @s ~ ~-1000 ~
+          kill @s
+        }
+
+        function siluet_tick {
+          function thebrokenscript:entity/set_target {target:"@p"}
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:night_lib/time_set {time:18000}
+          execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:night_lib/time_set {time:0}
+          fill ~-2 ~ ~-2 ~2 ~3 ~2 air replace #thebrokenscript:circuitbreakable
+          execute as @a[distance=0..2] run function thebrokenscript:damage_macro {name:"r2",damage:8}
+
+        }
+
+
     }
+
     function remove {
         # args:
         # command: str, function that normally removes entity
         function thebrokenscript:uuid_to_string/init with entity @s
-        block { with storage tbs:temp main
+        block { with storage tbs:uuid main
         $data remove storage tbs:entity entities[{entity:"$(uuid)"}]
         }
         $$(command)
 
     }
+
     function entity_tick {
-        function thebrokenscript:uuid_to_string/init with entity @s
-        block { with storage tbs:uuid main
-            $block { with storage tbs:entity entities[{entity:"$(uuid)"}]
-                $function thebrokenscript:entity/entity_procedures/$(spawn)
-                $data modify storage tbs:entity entities[{entity:"$(entity)"}].spawn set value "none"
-                $function thebrokenscript:entity/entity_procedures/$(tick)
-                $execute if entity @s[tag=tbs.entity.killed_player] run function thebrokenscript:entity/entity_procedures/$(kill)
-                execute if entity @s[tag=tbs.entity.killed_player] run tag @s remove tbs.entity.killed_player
-                }
+      execute if entity @s[type=wandering_trader] run {
+        effect give @s invisibility infinite 200 true
+        REPEAT (['.mainhand','.offhand','']) as i {
+          item replace entity @s weapon<%i%> with air
+          item replace entity @s weapon<%i%> with bucket[item_model="minecraft:air"]
         }
+        data modify entity @s Offers.Recipes set value []
+      }
+      function thebrokenscript:uuid_to_string/init with entity @s
+      block { with storage tbs:uuid main
+          $block { with storage tbs:entity entities[{entity:"$(uuid)"}]
+              $execute if entity @n[tag=tbs.root.$(name)] run tp @n[tag=tbs.root.$(name)] ~ ~ ~ ~ 0
+              $function thebrokenscript:entity/entity_procedures/$(spawn)
+              $data modify storage tbs:entity entities[{entity:"$(entity)"}].spawn set value "none"
+              $function thebrokenscript:entity/entity_procedures/$(tick)
+              $execute if entity @s[tag=tbs.entity.killed_player] run function thebrokenscript:entity/entity_procedures/$(kill)
+              execute if entity @s[tag=tbs.entity.killed_player] run tag @s remove tbs.entity.killed_player
+              }
+      }
+      execute unless score @s tbs.despawn_timer = @s tbs.despawn_timer run scoreboard players set @s tbs.despawn_timer -5
+      
+      execute if score @s tbs.despawn_timer matches -1.. run scoreboard players remove @s tbs.despawn_timer 1
+      execute if score @s tbs.despawn_timer matches -1..0 run function thebrokenscript:entity/despawn
+    }
+
+    function despawn {
+      REPEAT ({null_invade_base:"function animated_java:tbs_player/remove/this",nulll:"function thebrokenscript:entity/entity_procedures/nulll_despawn",null_is_here:"function animated_java:tbs_player/remove/this",null_endgame:"function animated_java:tbs_player/remove/this",faraway:"function animated_java:tbs_player/remove/this",false_villager:"function thebrokenscript:entity/entity_procedures/false_villager_despawn",circuit_disguised_as_creeper:"kill",circuit_stalk:"function thebrokenscript:entity/entity_procedures/circuit_stalk_despawn",circuit_mineshaft_flee:"function thebrokenscript:entity/entity_procedures/circuit_mineshaft_flee_despawn",curved:"function animated_java:tbs_player/remove/this",circuit:"function thebrokenscript:entity/entity_procedures/circuit_despawn",notexture:"function thebrokenscript:entity/entity_procedures/notexture_despawn",thebrokenend_stalk:"function thebrokenscript:entity/entity_procedures/thebrokenend_stalk_despawn",thebrokenend:"function thebrokenscript:entity/entity_procedures/thebrokenend_despawn",siluet_stare:"function thebrokenscript:entity/entity_procedures/siluet_stare_despawn",siluet:"function thebrokenscript:entity/entity_procedures/siluet_despawn"}) as entity,cmd {
+                execute if entity @s[tag=tbs.<%entity%>] run function thebrokenscript:entity/remove {command:"<%cmd%>"}
+              }
+
+    }
+
+    function apply_animation {
+
+      $data modify storage tbs:temp entity.animation.idle set value "$(idle)"
+      $data modify storage tbs:temp entity.animation.move set value "$(move)"
+      $data modify storage tbs:temp entity.animation.root set value "$(root)"
+
+      scoreboard players set -1 tbs.entity_motion1 -1
+      scoreboard players set @s tbs.entity_motion1 0
+
+      execute store result score @s tbs.entity_motion2 run data get entity @s Motion[0] 100
+      execute if score @s tbs.entity_motion2 matches ..-1 run scoreboard players operation @s tbs.entity_motion2 *= -1 tbs.entity_motion1
+      scoreboard players operation @s tbs.entity_motion1 += @s tbs.entity_motion2
+
+      execute store result score @s tbs.entity_motion2 run data get entity @s Motion[2] 100
+      execute if score @s tbs.entity_motion2 matches ..-1 run scoreboard players operation @s tbs.entity_motion2 *= -1 tbs.entity_motion1
+      scoreboard players operation @s tbs.entity_motion1 += @s tbs.entity_motion2
+
+      execute if score @s tbs.entity_motion1 matches 3.. run { with storage tbs:temp entity.animation
+        $execute as @n[tag=aj.$(root).root] unless entity @s[tag=aj.$(root).animation.$(move).playing] run { with storage tbs:temp entity.animation 
+          $function animated_java:$(root)/animations/pause_all
+          $function animated_java:$(root)/animations/$(move)/tween {to_frame:0,duration:2}
+        }
+
+      } else run { with storage tbs:temp entity.animation
+        $execute as @n[tag=aj.$(root).root] unless entity @s[tag=aj.$(root).animation.$(idle).playing] run { with storage tbs:temp entity.animation 
+          $function animated_java:$(root)/animations/pause_all
+          $function animated_java:$(root)/animations/$(idle)/tween {to_frame:0,duration:2}
+        }
+      }
+    }
+
+    function set_target {
+      $execute unless entity $(target) run return 0
+      data modify entity @s wander_target set value [I;0,0,0]
+      REPEAT (0,2) as i {
+        $execute store result entity @s wander_target[<%i%>] int 1 run data get entity $(target) Pos[<%i%>]
+      }
     }
 }
 
@@ -1256,13 +2487,13 @@ dimension clan_void {
 
 dir clan_void {
 
-function teleport {
-        execute store result storage tbs:temp clan_void.x int 1 run data get entity @s Pos[0]
-        execute store result storage tbs:temp clan_void.y int 1 run data get entity @s Pos[1]
-        execute store result storage tbs:temp clan_void.z int 1 run data get entity @s Pos[2]
-        execute in thebrokenscript:clan_void run tp @s 5 152 5
-        
-    }
+  function teleport {
+      execute store result storage tbs:temp clan_void.x int 1 run data get entity @s Pos[0]
+      execute store result storage tbs:temp clan_void.y int 1 run data get entity @s Pos[1]
+      execute store result storage tbs:temp clan_void.z int 1 run data get entity @s Pos[2]
+      execute in thebrokenscript:clan_void run tp @s 5 152 5
+      
+  }
 
     function randomize_structure {
         execute store result score @s tbs.entity_temp run random value 1..8
@@ -1794,12 +3025,42 @@ dir blocks {
             execute align xyz run summon item_display ~0.5 ~0.5 ~0.5 {Tags:["tbs.block.all_dead","tbs.block"],item:{id:"minecraft:stick",count:1,components:{"minecraft:item_model": "thebrokenscript:all_dead"}}}
             setblock ~ ~ ~ obsidian
         }
+        function hello {
+          execute align xyz run summon item_display ~0.5 ~0.5 ~0.5 {Tags:["tbs.block.hello","tbs.block"],item:{id:"minecraft:stick",count:1,components:{"minecraft:item_model": "thebrokenscript:hello"}}}
+          setblock ~ ~ ~ glass
+        }
+
+        function empty {
+            execute align xyz run summon item_display ~0.5 ~0.5 ~0.5 {Tags:["tbs.block.empty","tbs.block"],item:{id:"minecraft:stick",count:1,components:{"minecraft:item_model": "thebrokenscript:all_dead"}}}
+            setblock ~ ~ ~ glass
+        }
+
+        function oldblock {
+            execute align xyz run summon item_display ~0.5 ~0.5 ~0.5 {Tags:["tbs.block.oldblock","tbs.block"],item:{id:"minecraft:stick",count:1,components:{"minecraft:item_model": "thebrokenscript:oldblock"}}}
+            setblock ~ ~ ~ obsidian
+        }
+
+        function disruption {
+            execute align xyz run summon item_display ~0.5 ~0.5 ~0.5 {Tags:["tbs.block.disruption","tbs.block"],item:{id:"minecraft:stick",count:1,components:{"minecraft:item_model": "thebrokenscript:disruption"}}}
+            setblock ~ ~ ~ glass
+        }
+
+        function physicalstacktrace {
+            execute align xyz run summon item_display ~0.5 ~0.5 ~0.5 {Tags:["tbs.block.physicalstacktrace","tbs.block"],item:{id:"minecraft:stick",count:1,components:{"minecraft:item_model": "thebrokenscript:physicalstacktrace"}}}
+            setblock ~ ~ ~ obsidian
+        }
+
     }
     dir tick {
         function all_dead {
             execute unless block ~ ~ ~ obsidian run {
                 kill @n[type=item,nbt={Item:{id:"minecraft:obsidian"}},distance=0..1.5]
                 kill @s
+            }
+            block {
+              tag @s add tbs.block_check
+              execute if entity @n[tag=tbs.block,distance=0..0.25,tag=!tbs.block_check] run kill
+              tag @s remove tbs.block_check
             }
             execute as @a[distance=0..1.5] at @s run block {
                 execute if predicate {"condition":"minecraft:random_chance","chance":0.5} run {
@@ -1810,8 +3071,999 @@ dir blocks {
             }
         }
 
+        function empty {
+            execute unless block ~ ~ ~ glass run {
+                kill @n[type=item,nbt={Item:{id:"minecraft:glass"}},distance=0..1.5]
+                kill @s
+            }
+            block {
+              tag @s add tbs.block_check
+              execute if entity @n[tag=tbs.block,distance=0..0.25,tag=!tbs.block_check] run kill
+              tag @s remove tbs.block_check
+            }
+            function thebrokenscript:particles/spawn {name:"eyes",count:20,distx:3,disty:3,distz:3}
+            summon tnt
+        }
+
+        function hello {
+            execute unless block ~ ~ ~ glass run {
+                playsound thebrokenscript:heartbeat neutral @a ~ ~ ~ 555.0 1.0 0.0
+                place template thebrokenscript:magmacross
+                kill @n[type=item,nbt={Item:{id:"minecraft:glass"}},distance=0..1.5]
+                kill @s
+            }
+            block {
+              tag @s add tbs.block_check
+              execute if entity @n[tag=tbs.block,distance=0..0.25,tag=!tbs.block_check] run kill
+              tag @s remove tbs.block_check
+            }
+        }
+
+        function oldblock {
+            execute unless block ~ ~ ~ obsidian run {
+                kill @n[type=item,nbt={Item:{id:"minecraft:obsidian"}},distance=0..1.5]
+                kill @s
+            }
+            block {
+              tag @s add tbs.block_check
+              execute if entity @n[tag=tbs.block,distance=0..0.25,tag=!tbs.block_check] run kill
+              tag @s remove tbs.block_check
+            }
+        }
+
+        function disruption {
+            execute unless block ~ ~ ~ glass run {
+                kill @n[type=item,nbt={Item:{id:"minecraft:glass"}},distance=0..1.5]
+                kill @s
+            }
+            block {
+              tag @s add tbs.block_check
+              execute if entity @n[tag=tbs.block,distance=0..0.25,tag=!tbs.block_check] run kill
+              tag @s remove tbs.block_check
+            }
+        }
+
+        function physicalstacktrace {
+            execute unless block ~ ~ ~ obsidian run {
+                kill @n[type=item,nbt={Item:{id:"minecraft:obsidian"}},distance=0..1.5]
+                kill @s
+            }
+            block {
+              tag @s add tbs.block_check
+              execute if entity @n[tag=tbs.block,distance=0..0.25,tag=!tbs.block_check] run kill
+              tag @s remove tbs.block_check
+            }
+
+            scoreboard players add @s tbs.particle_decay 0
+            execute if entity @p[distance=0..1.5] if score @s tbs.particle_decay matches 0 run scoreboard players set @s tbs.particle_decay 1
+            execute if score @s tbs.particle_decay matches 1.. run scoreboard players add @s tbs.particle_decay 1
+            execute if score @s tbs.particle_decay matches 20.. run fill ~ -64 ~ ~ 319 ~ air
+        }
+
+
+        
+
         function tick {
-            execute if entity @s[tag=tbs.block.all_dead] run function all_dead
+          REPEAT (['all_dead','empty','hello','oldblock','disruption','physicalstacktrace']) as block {
+            execute if entity @s[tag=tbs.block.<%block%>] run function <%block%>
+          }
         }
     }
+}
+
+dir base_detect {
+  
+  function tick {
+    scoreboard players add @e[tag=tbs.base] tbs.base_detect_timer 1
+    kill @e[tag=tbs.base,tag=!tbs.base_found,scores={tbs.base_detect_timer=6000..}]
+    kill @e[tag=tbs.base,tag=tbs.base_found,scores={tbs.base_detect_timer=10000..}]
+
+    tag @e[tag=tbs.base,tag=!tbs.base_found,scores={tbs.base_detect=5..}] add tbs.base_found
+    execute as @a at @s run {
+    scoreboard players remove @s tbs.base_detect 1
+    execute if score @s tbs.base_detect matches ..0 run {
+      function summon_base_marker
+      execute store result score @s tbs.base_detect run random value 500..1500
+    }
+    }
+
+  }
+
+  function summon_base_marker {
+      summon marker ~ ~ ~ {Tags:["tbs.base","tbs.base_new"]}
+      execute as @n[tag=tbs.base_new,tag=tbs.base] at @s run {
+        scoreboard players set @s tbs.base_detect 1
+        execute as @e[tag=tbs.base,tag=!tbs.base_new,tag=!tbs.base_found,distance=0..20] run scoreboard players operation @n[tag=tbs.base_new] tbs.base_detect += @s tbs.base_detect
+        kill @e[tag=tbs.base,tag=!tbs.base_new,tag=!tbs.base_found,distance=0..20]
+        tag @s remove tbs.base_new
+      }
+    }
+}
+
+dir particles {
+
+  function spawn {
+    # args:
+    #
+    # name: str, either null or eyes
+    # count: number of particles, positive integer
+    # distx: positive integer
+    # disty
+    # distz
+    #
+
+    
+    REPEAT (['name','count','distx','disty','distz']) as i {
+      $data modify storage tbs:temp particles.<%i%> set value $(<%i%>)
+    }
+    #{name:"eyes",count:10,distx:2,disty:2,distz:2}
+    block { with storage tbs:temp particles
+
+    $scoreboard players set count tbs.particle_temp $(count)
+
+    block recursive { with storage tbs:temp particles 
+      scoreboard players remove count tbs.particle_temp 1
+
+      REPEAT (['x','y','z']) as i {
+        $execute store result storage tbs:temp particles.rand_dist<%i%> int 1 run random value -$(dist<%i%>)..$(dist<%i%>)
+      }
+      block spawn { with storage tbs:temp particles
+        $summon item_display ~$(rand_distx) ~$(rand_disty) ~$(rand_distz) {Tags:["tbs.particles.$(name)","tbs.particles_new","tbs.particles"],item:{id:"minecraft:stick",count:1,components:{item_model:"thebrokenscript:particles/$(name)"}},billboard:"center"}
+        execute store result score @n[tag=tbs.particles_new] tbs.particle_decay run random value 30..60
+        tag @n[tag=tbs.particles_new] remove tbs.particles_new
+
+      }
+      execute if score count tbs.particle_temp matches 1.. run function thebrokenscript:particles/recursive with storage tbs:temp particles
+    
+    }
+    }
+  }
+
+}
+
+function destroy_chunk {
+  summon marker ~ ~ ~ {Tags:["tbs.chunk_remover_spawner"]}
+
+  REPEAT ({x:0,z:2}) as pos,i {
+    execute store result storage tbs:temp chunk.<%pos%> int 0.0625 run data get entity @n[tag=tbs.chunk_remover_spawner] Pos[<%i%>]
+    execute store result storage tbs:temp chunk.<%pos%> int 16 run data get storage tbs:temp chunk.<%pos%>
+  }
+  block { with storage tbs:temp chunk
+    $execute positioned $(x) -64 $(z) run summon marker ~-16 ~ ~ {Tags:["tbs.chunk_remover"]}
+  }
+  kill @n[tag=tbs.chunk_remover_spawner]
+
+}
+
+dimension_type day_b {
+	"ultrawarm": false,
+	"natural": false,
+	"piglin_safe": false,
+	"respawn_anchor_works": false,
+	"bed_works": true,
+	"has_raids": false,
+	"has_skylight": false,
+	"has_ceiling": false,
+	"coordinate_scale": 1,
+	"ambient_light": 0,
+	"infiniburn": "#minecraft:infiniburn_overworld",
+	"fixed_time": 0,
+	"min_y": 0,
+	"height": 256,
+	"logical_height": 256,
+	"monster_spawn_light_level": {
+		"type": "minecraft:uniform",
+		"min_inclusive": 0,
+		"max_inclusive": 7
+	},
+	"monster_spawn_block_light_limit": 0,
+	"effects": "minecraft:the_nether"
+}
+
+dimension day_b {
+	"type": "thebrokenscript:day_b",
+	"generator": {
+		"type": "minecraft:noise",
+		"biome_source": {
+			"type": "minecraft:multi_noise",
+			"biomes": [
+				{
+					"biome": "thebrokenscript:null_biome_other",
+					"parameters": {
+						"temperature": 0,
+						"humidity": 0,
+						"continentalness": 0,
+						"weirdness": 0,
+						"erosion": 0,
+						"depth": 0,
+						"offset": 0
+					}
+				}
+			]
+		},
+		"settings": {
+			"name": "thebrokenscript:day_b",
+			"sea_level": 0,
+			"legacy_random_source": true,
+			"disable_mob_generation": false,
+			"aquifers_enabled": false,
+			"ore_veins_enabled": false,
+			"default_block": {
+				"Name": "minecraft:bedrock"
+			},
+			"default_fluid": {
+				"Name": "minecraft:bedrock"
+			},
+			"spawn_target": [],
+			"noise": {
+				"min_y": 0,
+				"height": 128,
+				"size_horizontal": 1,
+				"size_vertical": 1
+			},
+			"noise_router": {
+				"barrier": 0,
+				"fluid_level_floodedness": 0,
+				"fluid_level_spread": 0,
+				"lava": 0,
+				"temperature": 0,
+				"vegetation": 0,
+				"continents": 0,
+				"erosion": {
+					"type": "minecraft:cache_2d",
+					"argument": {
+						"type": "minecraft:end_islands"
+					}
+				},
+				"depth": 0,
+				"ridges": 0,
+				"initial_density_without_jaggedness": {
+					"type": "minecraft:add",
+					"argument1": -0.234375,
+					"argument2": {
+						"type": "minecraft:mul",
+						"argument1": {
+							"type": "minecraft:y_clamped_gradient",
+							"from_y": 4,
+							"to_y": 32,
+							"from_value": 0,
+							"to_value": 1
+						},
+						"argument2": {
+							"type": "minecraft:add",
+							"argument1": 0.234375,
+							"argument2": {
+								"type": "minecraft:add",
+								"argument1": -23.4375,
+								"argument2": {
+									"type": "minecraft:mul",
+									"argument1": {
+										"type": "minecraft:y_clamped_gradient",
+										"from_y": 56,
+										"to_y": 312,
+										"from_value": 1,
+										"to_value": 0
+									},
+									"argument2": {
+										"type": "minecraft:add",
+										"argument1": 23.4375,
+										"argument2": {
+											"type": "minecraft:add",
+											"argument1": -0.703125,
+											"argument2": {
+												"type": "minecraft:cache_2d",
+												"argument": {
+													"type": "minecraft:end_islands"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"final_density": {
+					"type": "minecraft:squeeze",
+					"argument": {
+						"type": "minecraft:mul",
+						"argument1": 0.64,
+						"argument2": {
+							"type": "minecraft:interpolated",
+							"argument": {
+								"type": "minecraft:blend_density",
+								"argument": {
+									"type": "minecraft:add",
+									"argument1": -0.234375,
+									"argument2": {
+										"type": "minecraft:mul",
+										"argument1": {
+											"type": "minecraft:y_clamped_gradient",
+											"from_y": 4,
+											"to_y": 32,
+											"from_value": 0,
+											"to_value": 1
+										},
+										"argument2": {
+											"type": "minecraft:add",
+											"argument1": 0.234375,
+											"argument2": {
+												"type": "minecraft:add",
+												"argument1": -23.4375,
+												"argument2": {
+													"type": "minecraft:mul",
+													"argument1": {
+														"type": "minecraft:y_clamped_gradient",
+														"from_y": 56,
+														"to_y": 312,
+														"from_value": 1,
+														"to_value": 0
+													},
+													"argument2": {
+														"type": "minecraft:add",
+														"argument1": 23.4375,
+														"argument2": "minecraft:end/sloped_cheese"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"vein_toggle": 0,
+				"vein_ridged": 0,
+				"vein_gap": 0
+			},
+			"surface_rule": {
+				"type": "minecraft:sequence",
+				"sequence": [
+					{
+						"type": "minecraft:condition",
+						"if_true": {
+							"type": "minecraft:biome",
+							"biome_is": [
+								"thebrokenscript:null_biome_other"
+							]
+						},
+						"then_run": {
+							"type": "minecraft:sequence",
+							"sequence": [
+								{
+									"type": "minecraft:condition",
+									"if_true": {
+										"type": "minecraft:stone_depth",
+										"surface_type": "floor",
+										"add_surface_depth": false,
+										"secondary_depth_range": 0,
+										"offset": 0
+									},
+									"then_run": {
+										"type": "minecraft:sequence",
+										"sequence": [
+											{
+												"type": "minecraft:condition",
+												"if_true": {
+													"type": "minecraft:water",
+													"offset": -1,
+													"surface_depth_multiplier": 0,
+													"add_stone_depth": false
+												},
+												"then_run": {
+													"type": "minecraft:block",
+													"result_state": {
+														"Name": "minecraft:dirt"
+													}
+												}
+											},
+											{
+												"type": "minecraft:block",
+												"result_state": {
+													"Name": "minecraft:dirt"
+												}
+											}
+										]
+									}
+								},
+								{
+									"type": "minecraft:condition",
+									"if_true": {
+										"type": "minecraft:stone_depth",
+										"surface_type": "floor",
+										"add_surface_depth": true,
+										"secondary_depth_range": 0,
+										"offset": 0
+									},
+									"then_run": {
+										"type": "minecraft:block",
+										"result_state": {
+											"Name": "minecraft:dirt"
+										}
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	}
+}
+
+dir day_b {
+    function teleport {
+        execute store result storage tbs:temp day_b.x int 1 run data get entity @s Pos[0]
+        execute store result storage tbs:temp day_b.y int 1 run data get entity @s Pos[1]
+        execute store result storage tbs:temp day_b.z int 1 run data get entity @s Pos[2]
+        execute in thebrokenscript:day_b positioned 15 100 15 positioned over motion_blocking run tp @s ~ ~ ~
+        
+    }
+
+    function leave {
+        $execute in overworld run tp @s $(x) 60 $(z)
+        scoreboard players set @s tbs.day_b 0
+    }
+}
+
+
+dir open_door {
+  function scan_init {
+    function scan_x
+  }
+  function scan_x {
+    REPEAT (-6,6) as i {
+      execute positioned ~<%i%> ~ ~ run function scan_y
+    }
+  }
+  function scan_y {
+    REPEAT (-6,6) as i {
+      execute positioned ~ ~<%i%> ~ run function scan_z
+    }
+  }
+
+  function scan_z {
+    REPEAT (-6,6) as i {
+      execute positioned ~ ~ ~<%i%> run function as_block
+    }
+  }
+
+  function as_block {
+    execute if block ~ ~ ~ #minecraft:doors[half=lower,open=false] run block {
+      REPEAT ({0:'lower',1:'upper'}) as i,half {
+        summon item_display ~ ~<%i%> ~ {Tags:["tbs.blockstate_get_<%half%>"]}
+        loot replace entity @n[tag=tbs.blockstate_get_<%half%>] contents loot blockstate:get
+        data modify entity @n[tag=tbs.blockstate_get_<%half%>] item.components."minecraft:custom_data".Properties.name set from entity @n[tag=tbs.blockstate_get_<%half%>] item.components."minecraft:custom_data".Name
+        block open_door { with entity @n[tag=tbs.blockstate_get_<%half%>] item.components."minecraft:custom_data".Properties
+          $setblock ~ ~ ~ $(name)[half=$(half),powered=$(powered),open=true,hinge=$(hinge),facing=$(facing)]
+        }
+        kill @n[tag=tbs.blockstate_get_<%half%>]
+      }
+      # half powered open hinge facing
+      playsound minecraft:block.wooden_door.open block @a[distance=0..32] ~ ~ ~ 1.5 1.0 0.0
+    }
+  }
+}
+
+dir sign_comms {
+  function scan_init {
+    execute align xyz positioned ~0.5 ~0.5 ~0.5 run function scan_x
+  }
+  function scan_x {
+    REPEAT (-6,6) as i {
+      execute positioned ~<%i%> ~ ~ run function scan_y
+    }
+  }
+  function scan_y {
+    REPEAT (-6,6) as i {
+      execute positioned ~ ~<%i%> ~ run function scan_z
+    }
+  }
+
+  function scan_z {
+    REPEAT (-6,6) as i {
+      execute positioned ~ ~ ~<%i%> run function as_block
+    }
+  }
+
+  function as_block {
+    execute if block ~ ~ ~ #minecraft:signs unless entity @n[tag=tbs.sign,distance=0..0.4] run {
+      summon marker ~ ~ ~ {Tags:["tbs.sign"]}
+    }
+  }
+
+  function place {
+    advancement revoke @s only thebrokenscript:placed_sign
+    function scan_init
+  }
+
+  function as_sign {
+    scoreboard players set @s tbs.entity_temp 0
+    REPEAT (0,3) as i {
+      data modify storage tbs:temp sign.compare set value '""'
+      execute store result score @s tbs.particle_decay run data modify storage tbs:temp sign.compare set from block ~ ~ ~ front_text.messages[<%i%>]
+      execute if score @s tbs.particle_decay matches 1 run scoreboard players add @s tbs.entity_temp 1
+    }
+    execute if score @s tbs.entity_temp matches 0 run tag @s add tbs.sign.empty
+    execute if entity @s[tag=tbs.sign.empty] unless score @s tbs.entity_temp matches 0 run {
+      REPEAT (0,3) as i {
+        REPEAT ({1:"Hello",2:"Hi?",3:"Who are you?",4:"What do you want?",5:"null",6:"Can you see me?",7:"Friend?",8:"Fuck you",9:"How can I help you?",10:"Herobrine",11:"Entity 303",12:"Integrity",13:"clan_build",14:"xXram2dieXx",15:"Revuxor",16:"Follow",17:"Nothingiswatching",18:"Circuit",19:"Steve",20:"Void",21:"The broken end",22:"sub 2 stevelocks"}) as text,key {
+          data modify storage tbs:temp sign.compare set value '"<%key%>"'
+          execute store result score @s tbs.entity_temp run data modify storage tbs:temp sign.compare set from block ~ ~ ~ front_text.messages[<%i%>]
+          execute if score @s tbs.entity_temp matches 0 run function thebrokenscript:sign_comms/messages/<%text%>
+        }
+      }
+      kill
+    }
+  }
+
+  dir messages {
+    function 1 {
+      execute store result storage tbs:temp chat.timer int 1 run random value 25..45
+      block { with storage tbs:temp chat
+        $schedule $(timer)s {
+          execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+          tellraw @a "<Null> err.type=null.hello"
+        }
+      }
+    }
+
+    function 2 {
+      execute store result storage tbs:temp chat.timer int 1 run random value 25..45
+      block { with storage tbs:temp chat
+        $schedule $(timer)s {
+          execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+          tellraw @a "<Null> err.type=null.hello"
+        }
+      }
+    }
+
+    function 3 {
+      schedule 5s {
+        execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+        tellraw @a "<Null> err.type=null."
+      }
+    }
+
+    function 4 {
+      schedule 5s {
+        execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+        tellraw @a "<null> err.type=null.freedom"
+      }
+    }
+
+    function 5 {
+      schedule 5s {
+        execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+        tellraw @a "<Null> The end is nigh"
+        schedule 1s {
+          execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+          tellraw @a "<Null> The end is null"
+          schedule 10t {
+            execute at @r run function thebrokenscript:entity/null/nulll_summon
+          }
+        }
+      }
+    }
+
+    function 6 {
+      schedule 5s {
+        execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+        tellraw @a "<Null> Yes."
+        schedule 3s {
+          execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+          tellraw @a "<Null> Hello."
+          schedule 3s {
+            execute at @r run summon lightning_bolt
+            execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/cantyousee"}}
+          }
+        }
+      }
+    }
+    
+    function 7 {
+      schedule 5s {
+        execute at @r run function thebrokenscript:entity/null/scare_summon
+      }
+    }
+
+    function 8 {
+      schedule 5s {
+        execute at @a run playsound thebrokenscript:nullkillsplayer neutral @p ~ ~ ~ 555.0 1.0 0.0
+        execute at @r run function thebrokenscript:entity/null/scare_summon
+      }
+    }
+
+    function 9 {
+      schedule 5s {
+        execute as @a at @s run playsound ambient.cave neutral @s ~ ~ ~ 555.0 1.0 0.0
+        tellraw @a "[?][?][?]"
+      }
+    }
+    
+    function 10 {
+      schedule 5s {
+        tellraw @a "<null>"
+      }
+
+    }
+
+    function 11 {
+      schedule 5s {
+        tellraw @a "<null> Ended his own life."
+      }
+    }
+
+    function 12 {
+      schedule 5s {
+        tellraw @a "<null> Deep down under the bedrock."
+      }
+    }
+
+    function 13 {
+      schedule 5s {
+        tellraw @a "<null> Home."
+      }
+    }
+
+    function 14 {
+      schedule 5s {
+        tellraw @a "<null> Rot in hell."
+        execute at @r run function thebrokenscript:entity/null/null_is_here_summon
+      }
+    }
+
+    function 15 {
+      schedule 5s {
+        tellraw @a "<null> Poor soul."
+      }
+    }
+
+    function 16 {
+      schedule 5s {
+        tellraw @a "<null> Is behind you."
+      }
+    }
+
+    function 17 {
+      schedule 5s {
+        tellraw @a "<null> A broken promise."
+      }
+    }
+
+    function 18 {
+      schedule 5s {
+        tellraw @a "<null> It was all his fault."
+      }
+    }
+
+    function 19 {
+      schedule 5s {
+        tellraw @a "<null> [0.1]"
+      }
+    }
+
+    function 20 {
+      schedule 5s {
+        tellraw @a "It's me."
+      }
+    }
+
+    function 21 {
+      schedule 5s {
+        tellraw @a "<Circuit> Administration."
+      }
+    }
+
+    function 22 {
+      schedule 5s {
+        tellraw @a "<Integrity> ...really?"
+        schedule 5s {
+          tellraw @a "<Integrity> Do it or you'll end up like them."
+        }
+      }
+    }
+    
+  }
+}
+
+advancement placed_sign {
+	"criteria": {
+		"a": {
+			"trigger": "minecraft:placed_block",
+			"conditions": {
+				"location": [
+					{
+						"condition": "minecraft:location_check",
+						"predicate": {
+							"block": {
+								"blocks": "#minecraft:signs"
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"function": "thebrokenscript:sign_comms/place"
+	}
+}
+
+predicate looking_at_circuit {
+	"condition": "minecraft:entity_properties",
+	"entity": "this",
+	"predicate": {
+		"type_specific": {
+			"type": "minecraft:player",
+			"looking_at": {
+				"nbt": "{Tags:[\"tbs.circuit_int\"]}"
+			}
+		}
+	}
+}
+
+predicate looking_at_tbe {
+	"condition": "minecraft:entity_properties",
+	"entity": "this",
+	"predicate": {
+		"type_specific": {
+			"type": "minecraft:player",
+			"looking_at": {
+				"nbt": "{Tags:[\"tbs.thebrokenend_int\"]}"
+			}
+		}
+	}
+}
+
+predicate looking_at_siluet {
+	"condition": "minecraft:entity_properties",
+	"entity": "this",
+	"predicate": {
+		"type_specific": {
+			"type": "minecraft:player",
+			"looking_at": {
+				"nbt": "{Tags:[\"tbs.siluet_int\"]}"
+			}
+		}
+	}
+}
+
+loot_table curved {
+	"type": "minecraft:empty",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:oak_log",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 8
+						}
+					],
+					"conditions": []
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "string"
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:diamond"
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:oak_sapling"
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:rotten_flesh"
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:cobblestone",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 9
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:iron_ingot",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 19
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "stone_axe",
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 5,
+								"max": 50
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:stone_sword",
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 50
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:music_disc_11"
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:dirt",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 5
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:redstone_torch",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 8
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:oak_planks",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 4
+						}
+					]
+				}
+			]
+		}
+	]
+}
+
+advancement can_you_see_me {
+	"display": {
+		"background": "minecraft:textures/block/stone.png",
+		"icon": {
+			"id": "minecraft:black_concrete",
+			"count": 1
+		},
+		"title": "Here I am.",
+		"description": "Can you see me?",
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"can_you_see_me_0": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}
+
+predicate on_surface {
+	"condition": "minecraft:all_of",
+	"terms": [
+		{
+			"condition": "minecraft:location_check",
+			"offsetY": -1,
+			"predicate": {
+				"block": {
+					"blocks": [
+						"minecraft:grass_block",
+						"minecraft:sand"
+					]
+				}
+			}
+		},
+		{
+			"condition": "minecraft:location_check",
+			"predicate": {
+				"light": {
+					"light": {
+						"min": 0,
+						"max": 5
+					}
+				}
+			}
+		}
+	]
+}
+
+predicate sleep_condition {
+	"condition": "minecraft:entity_properties",
+	"entity": "this",
+	"predicate": {
+		"nbt": "{SleepTimer:5s}"
+	}
 }

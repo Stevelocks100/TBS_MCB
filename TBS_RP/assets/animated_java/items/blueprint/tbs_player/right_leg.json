@@ -9,6 +9,27 @@
 					"type": "minecraft:model",
 					"model": "animated_java:blueprint/tbs_player/null/right_leg"
 				}
+			},
+			{
+				"when": "faraway",
+				"model": {
+					"type": "minecraft:model",
+					"model": "animated_java:blueprint/tbs_player/faraway/right_leg"
+				}
+			},
+			{
+				"when": "curved",
+				"model": {
+					"type": "minecraft:model",
+					"model": "animated_java:blueprint/tbs_player/curved/right_leg"
+				}
+			},
+			{
+				"when": "notexture",
+				"model": {
+					"type": "minecraft:model",
+					"model": "animated_java:blueprint/tbs_player/notexture/right_leg"
+				}
 			}
 		],
 		"fallback": {

@@ -9,6 +9,27 @@
 					"type": "minecraft:model",
 					"model": "animated_java:blueprint/tbs_player/null/head1"
 				}
+			},
+			{
+				"when": "faraway",
+				"model": {
+					"type": "minecraft:model",
+					"model": "animated_java:blueprint/tbs_player/faraway/head1"
+				}
+			},
+			{
+				"when": "curved",
+				"model": {
+					"type": "minecraft:model",
+					"model": "animated_java:blueprint/tbs_player/curved/head1"
+				}
+			},
+			{
+				"when": "notexture",
+				"model": {
+					"type": "minecraft:model",
+					"model": "animated_java:blueprint/tbs_player/notexture/head1"
+				}
 			}
 		],
 		"fallback": {

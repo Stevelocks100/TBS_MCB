@@ -2,6 +2,8 @@ geckolib
 generic hurt sounds
 invulnerable
 
+just a black box.
+
 procedure 1:
 - part of Nulll
 - stopsound @a

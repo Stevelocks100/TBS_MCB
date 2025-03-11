@@ -33,6 +33,12 @@ on tick:
 		- give all players a certain mob effect for 60 ticks with amp 1. maybe slowness?
 - set target to nearest player
 - stare at target
-- under certain conditions, like no player nearby, colliding with something it shouldn't, or "certain movement limit"
+- under certain conditions, like no player nearby, colliding with something it shouldn't, or "certain movement limit" (or looking at it?)
 	- despawn
 	- spawn [[CIRCUIT_MINESHAFT_FLEE]]
+
+if hurt:
+- 5% chance to
+	- plays "youwillregretthat"
+	- despawns
+	- spawns [[Circuit]] after 60 ticks

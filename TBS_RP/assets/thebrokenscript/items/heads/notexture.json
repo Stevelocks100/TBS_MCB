@@ -1,0 +1,99 @@
+{
+	"model": {
+		"type": "composite",
+		"models": [
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/0"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/1"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/2"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/3"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/4"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/5"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/6"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/7"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/8"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/9"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/10"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/11"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/12"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/13"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/14"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/15"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/16"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/17"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/18"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/19"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/20"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/21"
+			},
+			{
+				"type": "model",
+				"model": "thebrokenscript:item/notexture/22"
+			}
+		]
+	}
+}

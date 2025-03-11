@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "skeleton",
+    "skeleton_horse",
+    "zombie",
+    "zombie_horse",
+    "zombie_villager",
+    "creeper",
+    "bat",
+    "cave_spider",
+    "spider",
+    "enderman",
+    "witch"
+  ]
+}

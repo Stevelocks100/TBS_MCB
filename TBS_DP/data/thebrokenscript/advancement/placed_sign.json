@@ -1,0 +1,1 @@
+{"criteria":{"a":{"trigger": "minecraft:placed_block","conditions":{"location": [{"condition": "minecraft:location_check","predicate":{"block":{"blocks": "#minecraft:signs"}}}]}}},"rewards":{"function": "thebrokenscript:sign_comms/place"}}

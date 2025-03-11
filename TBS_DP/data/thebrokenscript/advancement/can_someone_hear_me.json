@@ -1,0 +1,1 @@
+{"display":{"background": "minecraft:textures/block/stone.png","icon":{"id": "minecraft:obsidian","count": 1},"title": "Go away","description": "This place is not for you.","frame": "task","show_toast": true,"announce_to_chat": true,"hidden": false},"criteria":{"can_someone_hear_me_0":{"trigger": "minecraft:impossible"}}}
