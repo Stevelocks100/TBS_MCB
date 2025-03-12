@@ -11,4 +11,4 @@ execute if predicate {"condition":"minecraft:random_chance","chance":0.02} run f
 execute if predicate {"condition":"minecraft:random_chance","chance":0.2} run function thebrokenscript:entity/entity_procedures/zzz/56
 fill ~-2 ~-2 ~-2 ~2 ~2 ~2 cobblestone replace #thebrokenscript:wa
 execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:entity/entity_procedures/zzz/57
-execute as @a[distance=0..4] run function thebrokenscript:entity/entity_procedures/damage_macro {name:'Circuit',damage:'50'}
+execute as @a[distance=0..4] run function thebrokenscript:damage_macro {name:'Circuit',damage:'50'}

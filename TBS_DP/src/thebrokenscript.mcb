@@ -1646,7 +1646,7 @@ dir entity {
             execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/textvhs1"}}
           }
 
-          execute as @a[distance=0..4] run function damage_macro {name:'Circuit',damage:'50'}
+          execute as @a[distance=0..4] run function thebrokenscript:damage_macro {name:'Circuit',damage:'50'}
 
         }
 
@@ -1780,8 +1780,8 @@ dir entity {
             execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/wecanhearyou"}}
           }
 
-          execute as @e[type=iron_golem,distance=0..30] run function damage_macro {name:"The Broken End",damage:30}
-          execute as @e[type=#minecraft:boat,distance=0..30] run function damage_macro {name:"The Broken End",damage:30}
+          execute as @e[type=iron_golem,distance=0..30] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
+          execute as @e[type=#minecraft:boat,distance=0..30] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
           # dotscreenframe1
           execute if predicate {"condition":"minecraft:random_chance","chance":0.04} run {
             execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/dotscreenframe1"}}
@@ -1790,7 +1790,7 @@ dir entity {
           effect give @a[distance=0..40] slow_falling 1 0 true
 
           fill ~-2 ~-2 ~-2 ~2 ~2 ~2 cobblestone replace #thebrokenscript:wa
-          execute as @a[distance=0..3] run function damage_macro {name:"The Broken End",damage:30}
+          execute as @a[distance=0..3] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
         }
 
         function thebrokenend_kill {

@@ -108,7 +108,7 @@
 			"locked": false,
 			"visibility": true,
 			"autouv": 0,
-			"selected": true,
+			"selected": false,
 			"children": ["20ea10fd-7f55-bb41-30f2-d54e712e23ea", "37bce705-ef97-4cad-71e8-4f2db3131bf3"]
 		}
 	],

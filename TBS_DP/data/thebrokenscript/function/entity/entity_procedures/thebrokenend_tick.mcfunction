@@ -9,11 +9,11 @@ execute if predicate {"condition":"minecraft:random_chance","chance":0.04} run f
 execute if predicate {"condition":"minecraft:random_chance","chance":0.07} run function thebrokenscript:entity/entity_procedures/zzz/73
 # wecanhearyou
 execute if predicate {"condition":"minecraft:random_chance","chance":0.02} run function thebrokenscript:entity/entity_procedures/zzz/74
-execute as @e[type=iron_golem,distance=0..30] run function thebrokenscript:entity/entity_procedures/damage_macro {name:"The Broken End",damage:30}
-execute as @e[type=#minecraft:boat,distance=0..30] run function thebrokenscript:entity/entity_procedures/damage_macro {name:"The Broken End",damage:30}
+execute as @e[type=iron_golem,distance=0..30] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
+execute as @e[type=#minecraft:boat,distance=0..30] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
 # dotscreenframe1
 execute if predicate {"condition":"minecraft:random_chance","chance":0.04} run function thebrokenscript:entity/entity_procedures/zzz/75
 effect give @a[distance=0..40] slowness 1 0 true
 effect give @a[distance=0..40] slow_falling 1 0 true
 fill ~-2 ~-2 ~-2 ~2 ~2 ~2 cobblestone replace #thebrokenscript:wa
-execute as @a[distance=0..3] run function thebrokenscript:entity/entity_procedures/damage_macro {name:"The Broken End",damage:30}
+execute as @a[distance=0..3] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
