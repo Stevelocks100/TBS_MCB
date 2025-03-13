@@ -34,3 +34,5 @@ function thebrokenscript:base_detect/tick
 execute as @a at @s if block ~ ~ ~ #minecraft:beds if predicate thebrokenscript:sleep_condition run function thebrokenscript:zzz/8
 execute at @a run fill ~-5 ~-5 ~-5 ~5 ~5 ~5 stone replace deepslate
 execute as @e[type=villager,tag=!tbs.entity.testificate_check] at @s run function thebrokenscript:zzz/9
+scoreboard players remove @e[tag=tbs.sound] tbs.sound_loop 1
+kill @e[tag=tbs.sound,scores={tbs.sound_loop=..0}]

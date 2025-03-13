@@ -6,6 +6,7 @@ scoreboard objectives add tbs.entity_temp dummy
 scoreboard objectives add tbs.null_torture dummy
 scoreboard objectives add tbs.clan_void dummy
 scoreboard objectives add tbs.day_b dummy
+scoreboard objectives add tbs.sound_loop dummy
 scoreboard objectives add tbs.particle_temp dummy
 scoreboard objectives add tbs.entity_checker dummy
 scoreboard objectives add tbs.base_detect dummy

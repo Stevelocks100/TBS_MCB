@@ -13,72 +13,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Events.md",
+                "file": "Entities/NULL_ENDGAME.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Events"
-            }
-          },
-          {
-            "id": "59c2167a9ac4d856",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Entities/BSOD.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "BSOD"
-            }
-          },
-          {
-            "id": "842232522fe7530a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Entities/EntitySpawner.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "EntitySpawner"
-            }
-          },
-          {
-            "id": "928a4459debbea04",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Entities/Integrity Boss fight.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Integrity Boss fight"
-            }
-          },
-          {
-            "id": "1300c07c7aece66d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Attributes lookup table.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Attributes lookup table"
+              "title": "NULL_ENDGAME"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -220,13 +163,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "928a4459debbea04",
+  "active": "4748af68de7f1a5a",
   "lastOpenFiles": [
+    "Events.md",
+    "Attributes lookup table.md",
+    "Entities/BSOD.md",
+    "Entities/EntitySpawner.md",
+    "Entities/Integrity Boss fight.md",
     "MISSILE.md",
     "Assets/intmissile.geo.gif",
-    "Entities/Integrity Boss fight.md",
-    "Attributes lookup table.md",
-    "Entities/EntitySpawner.md",
     "Entities/THE_BROKEN_END_OVERHAUL_STALK.md",
     "Entities/Hetzer.md",
     "Entities/PigCircuit.md",
@@ -236,8 +181,6 @@
     "Entities/NULL_WATCHING.md",
     "Entities/Siluet Stare.md",
     "Entities/NULL_FLYING.md",
-    "Entities/BSOD.md",
-    "Events.md",
     "Event 14 Book.md",
     "Entities/RandomStructureEntity.md",
     "Entities/NULL_UNBEATABLE_BOSSFIGHT.md",

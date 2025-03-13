@@ -1,4 +1,6 @@
 # Created by Stevelocks
+execute if entity @s[tag=tbs.null_watching] run function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
+execute if entity @s[tag=tbs.null_flying] run function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
 execute if entity @s[tag=tbs.null_invade_base] run function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
 execute if entity @s[tag=tbs.nulll] run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/nulll_despawn"}
 execute if entity @s[tag=tbs.null_is_here] run function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
