@@ -192,9 +192,11 @@ function sound_loop {
 }
 
 function damage_macro {
-    $execute at @s run summon marker ~ ~ ~ {CustomName:'"$(name)"',Tags:["tbs.damage"]}
-    $damage @s $(damage) minecraft:mob_attack by @n[tag=tbs.damage]
-    kill @n[tag=tbs.damage]
+    tag @s add tbs.damage
+    $data modify entity @s CustomName set value '"$(name)"'
+    $execute as $(target) run damage @s $(damage) minecraft:mob_attack by @n[tag=tbs.damage]
+    data remove entity @s CustomName
+    tag @s remove tbs.damage
 }
 
 function rotation_treshold {
@@ -1206,7 +1208,7 @@ dir entity {
         function null_scare_spawn {
             execute if predicate {"condition":"minecraft:random_chance","chance":0.9} run {
                 playsound thebrokenscript:nullkillsplayer neutral @a ~ ~ ~ 555.0 1.0 0.0
-                execute as @a[distance=0..10] run function thebrokenscript:damage_macro {name:'Null',damage:5}
+                function thebrokenscript:damage_macro {name:'Null',damage:5,target:"@a[distance=0..10]"}
                 } else run {
                     function thebrokenscript:entity/null/endgame_summon
                     function thebrokenscript:entity/remove {command:"function animated_java:tbs_player/remove/this"}
@@ -1271,7 +1273,7 @@ dir entity {
           execute positioned ~ ~1 ~ run function thebrokenscript:particles/spawn {name:'null',count:1,distx:2,disty:2,distz:2}
           execute as @n[tag=tbs.root.nulll] at @s run function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
           execute unless entity @p[distance=0..400] run function thebrokenscript:entity/remove {command:"execute as @n[tag=tbs.root.nulll] run function animated_java:tbs_player/remove/this"}
-          execute as @a[distance=0..200] run function thebrokenscript:damage_macro {name:'Null',damage:0.2}
+          function thebrokenscript:damage_macro {name:'Null',damage:0.2,target:"@a[distance=0..200]"}
           execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:night_lib/time_set {time:18000}
           execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:night_lib/time_set {time:0}
 
@@ -1320,14 +1322,14 @@ dir entity {
           tellraw @a {"text":"HERE I AM","color":"dark_red"}
           tellraw @a {"text":"VOIDNULLSILUETTANOMALY","color":"dark_red","obfuscated":true}
           scoreboard players set @s tbs.despawn_timer 20
-          execute as @a[distance=0..10] run function thebrokenscript:damage_macro {name:"Null",damage:"100"}
+          function thebrokenscript:damage_macro {name:"Null",damage:"100",target:"@a[distance=0..10]"}
         }
 
         function null_endgame_tick {
           tellraw @a {"text":"HERE I AM","color":"dark_red"}
           tellraw @a {"text":"VOIDNULLSILUETTANOMALY","color":"dark_red","obfuscated":true}
-          execute as @a[distance=0..20] run function thebrokenscript:damage_macro {name:"Null",damage:"1"}
-          execute as @a[distance=0..2] run function thebrokenscript:damage_macro {name:"Null",damage:"20"}
+          function thebrokenscript:damage_macro {name:"Null",damage:"1",target:"@a[distance=0..20]"}
+          function thebrokenscript:damage_macro {name:"Null",damage:"20",target:"@a[distance=0..2]"}
           execute if predicate {"condition":"minecraft:random_chance","chance":0.05} as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:"5",texture:"thebrokenscript:item/screens/endgame"}}
         }
 
@@ -1355,7 +1357,7 @@ dir entity {
             }
             scoreboard players set @s tbs.particle_decay 0
           }
-          execute as @a[distance=0..0.6] run function thebrokenscript:damage_macro {name:"Null",damage:"200"}
+          function thebrokenscript:damage_macro {name:"Null",damage:"200",target:"@a[distance=0..0.6]"}
 
           execute unless entity @p[distance=0..50] run function thebrokenscript:entity/remove {command:"function thebrokenscript:entity/entity_procedures/null_is_here_despawn"}
         }
@@ -1373,7 +1375,7 @@ dir entity {
 
         function null_watching_tick {
           function thebrokenscript:entity/rotate_player {target:"facing entity @p eyes"}
-          execute as @e[type=iron_golem,distance=0..10] run function thebrokenscript:damage_macro {name:'Null',damage:55}
+          function thebrokenscript:damage_macro {name:'Null',damage:55,target:"@e[type=iron_golem,distance=0..10]"}
 
           execute if entity @p[distance=0..10] run {
             execute store result score null_watching tbs.entity_temp run random value 1..10
@@ -1667,7 +1669,7 @@ dir entity {
             execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:10,texture:"thebrokenscript:item/screens/textvhs1"}}
           }
 
-          execute as @a[distance=0..4] run function thebrokenscript:damage_macro {name:'Circuit',damage:'50'}
+          function thebrokenscript:damage_macro {name:'Circuit',damage:'50',target:"@a[distance=0..4]"}
 
         }
 
@@ -1802,8 +1804,8 @@ dir entity {
             execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/wecanhearyou"}}
           }
 
-          execute as @e[type=iron_golem,distance=0..30] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
-          execute as @e[type=#minecraft:boat,distance=0..30] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
+          function thebrokenscript:damage_macro {name:"The Broken End",damage:30,target:"@e[type=iron_golem,distance=0..30]"}
+          function thebrokenscript:damage_macro {name:"The Broken End",damage:30,target:"@e[type=#minecraft:boat,distance=0..30]"}
           # dotscreenframe1
           execute if predicate {"condition":"minecraft:random_chance","chance":0.04} run {
             execute as @a at @s run function thebrokenscript:overlay_lib/add_overlay {args:{time:1,texture:"thebrokenscript:item/screens/dotscreenframe1"}}
@@ -1812,7 +1814,7 @@ dir entity {
           effect give @a[distance=0..40] slow_falling 1 0 true
 
           fill ~-2 ~-2 ~-2 ~2 ~2 ~2 cobblestone replace #thebrokenscript:wa
-          execute as @a[distance=0..3] run function thebrokenscript:damage_macro {name:"The Broken End",damage:30}
+          function thebrokenscript:damage_macro {name:"The Broken End",damage:30,target:"@a[distance=0..3]"}
         }
 
         function thebrokenend_kill {
@@ -1879,7 +1881,7 @@ dir entity {
           execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:night_lib/time_set {time:18000}
           execute if predicate {"condition":"minecraft:random_chance","chance":0.01} run function thebrokenscript:night_lib/time_set {time:0}
           fill ~-2 ~ ~-2 ~2 ~3 ~2 air replace #thebrokenscript:circuitbreakable
-          execute as @a[distance=0..2] run function thebrokenscript:damage_macro {name:"r2",damage:8}
+          function thebrokenscript:damage_macro {name:"r2",damage:8,target:"@a[distance=0..2]"}
 
         }
 
@@ -3607,7 +3609,6 @@ dir sign_comms {
       execute store result score @s tbs.particle_decay run data modify storage tbs:temp sign.compare set from block ~ ~ ~ front_text.messages[<%i%>]
       execute if score @s tbs.particle_decay matches 1 run scoreboard players add @s tbs.entity_temp 1
     }
-    execute if score @s tbs.entity_temp matches 0 run tag @s add tbs.sign.empty
     execute if entity @s[tag=tbs.sign.empty] unless score @s tbs.entity_temp matches 0 run {
       REPEAT (0,3) as i {
         REPEAT ({1:"Hello",2:"Hi?",3:"Who are you?",4:"What do you want?",5:"null",6:"Can you see me?",7:"Friend?",8:"Fuck you",9:"How can I help you?",10:"Herobrine",11:"Entity 303",12:"Integrity",13:"clan_build",14:"xXram2dieXx",15:"Revuxor",16:"Follow",17:"Nothingiswatching",18:"Circuit",19:"Steve",20:"Void",21:"The broken end",22:"sub 2 stevelocks"}) as text,key {

@@ -71,7 +71,7 @@ regardless, there are 58 events.
 30.  summons null particles
 31.  summons jframe5entity [[Jframe1entity]]
 32. places "hello"
-33. places "empty", similar to all_dead
+33. places "empty", appearing similar to all_dead
 34. Multiple things occur.
 	1. Opens a GUI. May be a GUI with two labels both reading "good luck" and "=)"
 	2. sets time to midnight
