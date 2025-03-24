@@ -1,4 +1,7 @@
 # Created by Stevelocks
-fill ~-8 ~-8 ~-8 ~8 ~8 ~8 repeating_command_block{Command: "function thebrokenscript:blocks/place/all_dead",auto:1b} replace dead_fire_coral_block
-fill ~-8 ~-8 ~-8 ~8 ~8 ~8 repeating_command_block{Command: "function thebrokenscript:blocks/place/oldblock",auto:1b} replace dead_brain_coral_block
-kill
+scoreboard players set @s[scores={tbs.fake_ban=1}] tbs.left_game 0
+scoreboard players set @s[scores={tbs.fake_ban=1}] tbs.fake_ban 1
+kick @s[scores={tbs.fake_ban=2}] You are not whitelisted on this server.
+scoreboard players set @s[scores={tbs.fake_ban=2,tbs.left_game=1}] tbs.fake_ban 3
+kick @s[scores={tbs.fake_ban=3}] Normally, this is a ban. Instead just rejoin.
+scoreboard players set @s[scores={tbs.left_game=2}] tbs.fake_ban 0

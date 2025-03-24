@@ -18,5 +18,6 @@ scoreboard objectives add tbs.overlay_temp dummy
 scoreboard objectives add tbs.entity_motion1 dummy
 scoreboard objectives add tbs.entity_motion2 dummy
 scoreboard objectives add tbs.fake_ban dummy
+scoreboard objectives add tbs.left_game minecraft.custom:minecraft.leave_game
 execute unless score enabled tbs.moon_event = enabled tbs.moon_event run scoreboard players set enabled tbs.moon_event 0
 scoreboard players set 8 tbs.moon_event 8

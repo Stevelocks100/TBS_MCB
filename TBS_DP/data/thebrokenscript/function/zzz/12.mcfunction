@@ -1,2 +1,3 @@
 # Created by Stevelocks
-$execute positioned $(x) -64 $(z) run summon marker ~-16 ~ ~ {Tags:["tbs.chunk_remover"]}
+scoreboard players operation 360 tbs.threshold_temp -= d tbs.threshold_temp
+scoreboard players operation d tbs.threshold_temp = 360 tbs.threshold_temp

@@ -1,3 +1,5 @@
 # Created by Stevelocks
-scoreboard players operation 360 tbs.threshold_temp -= d tbs.threshold_temp
-scoreboard players operation d tbs.threshold_temp = 360 tbs.threshold_temp
+function thebrokenscript:entity/circuit/false_villager_summon
+data modify entity @n[tag=tbs.testificate] Age set from entity @s Age
+tp @s ~ ~-1000 ~
+kill

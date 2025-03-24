@@ -1,3 +1,3 @@
 # Created by Stevelocks
-execute as @a at @s rotated as @s run playsound minecraft:block.grass.break neutral @s ^-4.813105196371097 ^-0.8482002638338386 ^4.45082142689394 555.0 0.8 0.0
+execute as @a at @s rotated as @s run playsound minecraft:block.grass.break neutral @s ^0.42804169086070765 ^3.0176186504620155 ^-4.392197987870341 555.0 0.8 0.0
 schedule function thebrokenscript:events/zzz/20 20t append

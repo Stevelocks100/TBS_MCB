@@ -19,6 +19,7 @@ function load thebrokenscript:load{
     scoreboard objectives add tbs.entity_motion1 dummy
     scoreboard objectives add tbs.entity_motion2 dummy
     scoreboard objectives add tbs.fake_ban dummy
+    scoreboard objectives add tbs.left_game minecraft.custom:minecraft.leave_game
     execute unless score enabled tbs.moon_event = enabled tbs.moon_event run scoreboard players set enabled tbs.moon_event 0
     scoreboard players set 8 tbs.moon_event 8
 }
@@ -53,10 +54,18 @@ function tick thebrokenscript:tick {
       }
       tp @s ~ ~7 ~
     }
-    scoreboard players add @a[scores={tbs.fake_ban=0..}] tbs.fake_ban 1
-    scoreboard players set @a[scores={tbs.fake_ban=3..}] tbs.fake_ban -1
-    kick @a[scores={tbs.fake_ban=1}] You are not whitelisted on this server.
-    kick @a[scores={tbs.fake_ban=2}] Normally, this is a ban. Instead just rejoin.
+    execute as @a[scoes={tbs.fake_ban=1..}] run {
+      scoreboard players set @s[scores={tbs.fake_ban=1}] tbs.left_game 0
+      scoreboard players set @s[scores={tbs.fake_ban=1}] tbs.fake_ban 1
+      kick @s[scores={tbs.fake_ban=2}] You are not whitelisted on this server.
+
+      scoreboard players set @s[scores={tbs.fake_ban=2,tbs.left_game=1}] tbs.fake_ban 3
+      kick @s[scores={tbs.fake_ban=3}] Normally, this is a ban. Instead just rejoin.
+
+      scoreboard players set @s[scores={tbs.left_game=2}] tbs.fake_ban 0
+    }
+    
+    
 
     scoreboard players remove @e[tag=tbs.particles] tbs.particle_decay 1
     kill @e[tag=tbs.particles,scores={tbs.particle_decay=..0}]
@@ -1164,7 +1173,7 @@ dir entity {
       function summon {
         execute rotated ~ 0 run function animated_java:siluet/summon {args:{animation:'idle',start_animation:true}}
         tag @n[tag=aj.siluet.root,tag=!tbs.root.siluet] add tbs.root.siluet
-        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:0.9}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
+        summon wandering_trader ~ ~ ~ {Tags:["tbs.new_entity"],Invulnerable:1b,Silent:1b,Offers:{Recipes:[]},attributes:[{id:"movement_speed",base:1.1}],active_effects:[{id:"invisibility",amplifier:200,duration:-1,show_particles:false}]}
         execute as @n[tag=!tbs.entity,tag=tbs.new_entity] at @s run function thebrokenscript:entity/set_procedures {args:{spawn:"siluet_spawn",tick:"siluet_tick",name:"siluet"}}
         tag @n[tag=tbs.new_entity] remove tbs.new_entity
       }
@@ -1424,7 +1433,7 @@ dir entity {
 
         function null_flying_spawn {
           playsound thebrokenscript:nullsad neutral @a ~ ~ ~ 555.0 1.0 0.0
-          scoreboard players set @s tbs.despawn_timer 1000
+          scoreboard players set @s tbs.despawn_timer 5000
         }
 
         function null_flying_tick {
@@ -1834,7 +1843,7 @@ dir entity {
         }
 
         function siluet_stare_despawn {
-          execute if score @s tbs.particle_decay matches 1 run function thebrokenscript:entity/siluet/summon
+          execute if score @s tbs.particle_decay matches 1 positioned ^ ^-0.3 ^ run function thebrokenscript:entity/siluet/summon
           execute as @n[tag=tbs.root.siluet_stare] run function animated_java:siluet/remove/this
           tp @s ~ ~-1000 ~
           kill @s
@@ -1903,8 +1912,7 @@ dir entity {
       execute if entity @s[type=wandering_trader] run {
         effect give @s invisibility infinite 200 true
         REPEAT (['.mainhand','.offhand','']) as i {
-          item replace entity @s weapon<%i%> with air
-          item replace entity @s weapon<%i%> with bucket[item_model="minecraft:air"]
+          item replace entity @s weapon<%i%> with milk_bucket[item_model="minecraft:air"]
         }
         data modify entity @s Offers.Recipes set value []
       }
@@ -3609,6 +3617,9 @@ dir sign_comms {
       execute store result score @s tbs.particle_decay run data modify storage tbs:temp sign.compare set from block ~ ~ ~ front_text.messages[<%i%>]
       execute if score @s tbs.particle_decay matches 1 run scoreboard players add @s tbs.entity_temp 1
     }
+    scoreboard players add @s[tag=tbs.sign.empty] tbs.particle_temp 1
+    kill @s[tag=tbs.sign.empty,scores={tbs.particle_temp=1000..}]
+    execute unless entity @s[tag=tbs.sign.empty] if score @s tbs.entity_temp matches 0 run tag @s add tbs.sign.empty
     execute if entity @s[tag=tbs.sign.empty] unless score @s tbs.entity_temp matches 0 run {
       REPEAT (0,3) as i {
         REPEAT ({1:"Hello",2:"Hi?",3:"Who are you?",4:"What do you want?",5:"null",6:"Can you see me?",7:"Friend?",8:"Fuck you",9:"How can I help you?",10:"Herobrine",11:"Entity 303",12:"Integrity",13:"clan_build",14:"xXram2dieXx",15:"Revuxor",16:"Follow",17:"Nothingiswatching",18:"Circuit",19:"Steve",20:"Void",21:"The broken end",22:"sub 2 stevelocks"}) as text,key {
