@@ -3,3 +3,4 @@ execute store result storage tbs:temp clan_void.x int 1 run data get entity @s P
 execute store result storage tbs:temp clan_void.y int 1 run data get entity @s Pos[1]
 execute store result storage tbs:temp clan_void.z int 1 run data get entity @s Pos[2]
 execute in thebrokenscript:clan_void run tp @s 5 152 5
+execute in thebrokenscript:clan_void run fill 4 151 4 6 151 6 cobblestone keep

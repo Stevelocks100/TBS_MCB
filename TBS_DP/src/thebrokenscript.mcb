@@ -2524,6 +2524,7 @@ dir clan_void {
       execute store result storage tbs:temp clan_void.y int 1 run data get entity @s Pos[1]
       execute store result storage tbs:temp clan_void.z int 1 run data get entity @s Pos[2]
       execute in thebrokenscript:clan_void run tp @s 5 152 5
+      execute in thebrokenscript:clan_void run fill 4 151 4 6 151 6 cobblestone keep
       
   }
 
@@ -3029,6 +3030,7 @@ dir null_torture {
         execute store result storage tbs:temp null_torture.z int 1 run data get entity @s Pos[2]
         execute in thebrokenscript:null_torture run tp @s 7 152 7
         execute if dimension thebrokenscript:null_torture run place template thebrokenscript:null_torture/bedrockhall1 0 150 0
+        execute in thebrokenscript:null_torture run fill 6 151 6 8 151 8 bedrock keep
         
     }
 
@@ -3529,7 +3531,7 @@ dir day_b {
         execute store result storage tbs:temp day_b.x int 1 run data get entity @s Pos[0]
         execute store result storage tbs:temp day_b.y int 1 run data get entity @s Pos[1]
         execute store result storage tbs:temp day_b.z int 1 run data get entity @s Pos[2]
-        execute in thebrokenscript:day_b positioned 15 100 15 positioned over motion_blocking run tp @s ~ ~ ~
+        execute in thebrokenscript:day_b positioned 0 100 0 run spreadplayers ~ ~ 2 40 false @s
         
     }
 

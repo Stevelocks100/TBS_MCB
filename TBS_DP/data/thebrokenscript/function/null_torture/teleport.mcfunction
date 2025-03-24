@@ -4,3 +4,4 @@ execute store result storage tbs:temp null_torture.y int 1 run data get entity @
 execute store result storage tbs:temp null_torture.z int 1 run data get entity @s Pos[2]
 execute in thebrokenscript:null_torture run tp @s 7 152 7
 execute if dimension thebrokenscript:null_torture run place template thebrokenscript:null_torture/bedrockhall1 0 150 0
+execute in thebrokenscript:null_torture run fill 6 151 6 8 151 8 bedrock keep
