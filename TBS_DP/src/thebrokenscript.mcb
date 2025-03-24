@@ -1581,7 +1581,7 @@ dir entity {
         }
 
         function circuit_mineshaft_flee_despawn {
-          function thebrokenscript:entity/circuit/circuit_mineshaft_walk_summon
+          execute positioned ^ ^ ^-0.3 run function thebrokenscript:entity/circuit/circuit_mineshaft_walk_summon
           execute as @n[tag=tbs.root.circuit_stalk] run function animated_java:circuit/remove/this
           tp @s ~ ~-1000 ~
           kill @s
@@ -1843,7 +1843,7 @@ dir entity {
         }
 
         function siluet_stare_despawn {
-          execute if score @s tbs.particle_decay matches 1 positioned ^ ^-0.3 ^ run function thebrokenscript:entity/siluet/summon
+          execute if score @s tbs.particle_decay matches 1 positioned ^ ^ ^-0.3 run function thebrokenscript:entity/siluet/summon
           execute as @n[tag=tbs.root.siluet_stare] run function animated_java:siluet/remove/this
           tp @s ~ ~-1000 ~
           kill @s

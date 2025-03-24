@@ -1,5 +1,5 @@
 # Created by Stevelocks
-execute if score @s tbs.particle_decay matches 1 positioned ^ ^-0.3 ^ run function thebrokenscript:entity/siluet/summon
+execute if score @s tbs.particle_decay matches 1 positioned ^ ^ ^-0.3 run function thebrokenscript:entity/siluet/summon
 execute as @n[tag=tbs.root.siluet_stare] run function animated_java:siluet/remove/this
 tp @s ~ ~-1000 ~
 kill @s
