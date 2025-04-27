@@ -9,3 +9,9 @@ Support the original mod here: https://modrinth.com/mod/the-broken-script
 
 Also, expect bugs. 
 I do not plan on making any changes past what is here, and in the past commits.
+
+
+for the regular version to work (kicking stuff)
+changed this in server.properties:
+
+function-permission-level=4
