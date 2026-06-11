@@ -1,3 +1,6 @@
+ok ig this is public again just cuz, and im tbs dev fr now
+WARNING: BROKEN AND BUGGY!! I WILL NOT BE HELPING YOU IF YOU'RE HAVING PROBLEMS!
+
 # TBS_MCB
 The broken script ported to vanilla 1.21.4 via MCBuild
 
